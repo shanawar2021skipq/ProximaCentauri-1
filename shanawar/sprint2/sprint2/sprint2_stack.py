@@ -95,7 +95,6 @@ class Sprint2Stack(cdk.Stack):
             latency_alarm.add_alarm_action(actions_.SnsAction(newtopic))
             count+=1
         
-        
 
         """ 
      # AVAILABILITY ALARM    
