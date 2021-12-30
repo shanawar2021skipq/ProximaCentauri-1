@@ -9,32 +9,23 @@ from aws_cdk import (
     aws_sns_subscriptions as subscriptions_,
     aws_cloudwatch_actions as actions_,
     aws_dynamodb as dynamodb_,
-    aws_codedeploy as codedeploy,
-    aws_s3 as s3
+    aws_codedeploy as codedeploy
 ) 
 from resources import constants as constants
-from resources.bucket import s3bucket 
 import os
 
 class Sprint2Stack(cdk.Stack):
 
     def __init__(self, scope: cdk.Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
-        # CREating Lambda Roles
+    
         lambda_role=self.create_lambda_role()
+        
         # WebHealth LAMBDA FUNCTION
         WebHealthLambda = self.create_lambda("WebHealthLambda","./resources","healthweb_lambda.lambda_handler",lambda_role) 
         # DYNAMODB LAMBDA FUNCTION
         DBLambda = self.create_lambda("DynamoDBLambda","./resources","dynamodb_lambda.lambda_handler",lambda_role) 
-        
-        
-        ###  S3 Bucket class ### 
-       # bucket = s3.Bucket(self, "shanawarbucket")
-        ### Class Object ###
-        s3_bucket = s3bucket()
-        #s3_bucket.store_urls('shanawarbucket')
-        URLS = s3_bucket.get_bucket('shanawarbucket')
-        #########################
+                
         
         lambda_schedule= events_.Schedule.rate(cdk.Duration.minutes(1))
         lambda_target= targets_.LambdaFunction(handler=WebHealthLambda)
@@ -47,57 +38,10 @@ class Sprint2Stack(cdk.Stack):
         
         
         newtopic =sns.Topic(self,"Web Health by Shanawar")
-        # EMAIL SUBSCRIPTION
         newtopic.add_subscription(subscriptions_.EmailSubscription('shanawar.ali.chouhdry.s@skipq.org'))
         # DYNAMODB SUBSCRIPTION
         newtopic.add_subscription(subscriptions_.LambdaSubscription(DBLambda))
         
-        
-        count=1
-        for url in URLS:
-            
-             ############################## Availability metrics and alarm for availability ###############################
-            
-            dimension={'URL': url}
-            availability_matric=cloudwatch_.Metric(namespace=constants.URL_Monitor_Namespace,
-            metric_name = constants.URL_Monitor_Name_Availability+' '+url+str(count),
-            dimensions_map=dimension,
-            period=cdk.Duration.minutes(1))
-            
-            availability_alarm= cloudwatch_.Alarm(self,
-            id = 'Availability_Alarm'+' '+url,
-            metric = availability_matric,
-            comparison_operator= cloudwatch_.ComparisonOperator.LESS_THAN_THRESHOLD,
-            datapoints_to_alarm=1,
-            evaluation_periods = 1,
-            threshold = 1
-            )
-            
-            
-             ############################## Latency Metrics and Latency alarms ###############################
-
-
-            latency_matric=cloudwatch_.Metric(namespace=constants.URL_Monitor_Namespace,
-            metric_name = constants.URL_Monitor_Name_Latency+' '+url+str(count),
-            dimensions_map=dimension,
-            period=cdk.Duration.minutes(1))
-            
-            latency_alarm= cloudwatch_.Alarm(self,
-            id = 'Latency_Alarm'+' '+url,
-            metric = latency_matric,
-            comparison_operator= cloudwatch_.ComparisonOperator.GREATER_THAN_THRESHOLD,
-            datapoints_to_alarm=1,
-            evaluation_periods = 1,
-            threshold = 0.25
-            )
-             
-            availability_alarm.add_alarm_action(actions_.SnsAction(newtopic))
-            latency_alarm.add_alarm_action(actions_.SnsAction(newtopic))
-            count+=1
-        
-        
-
-        """ 
      # AVAILABILITY ALARM    
         dimenesion= {'URL':constants.URL_to_Monitor} 
         availability_metric = cloudwatch_.Metric(
@@ -129,7 +73,6 @@ class Sprint2Stack(cdk.Stack):
         datapoints_to_alarm=1,
         evaluation_periods=1,
         threshold=0.25)
-        """
 #############################################################
         ############ SPRINT 2 CODE ADDITION #######
         # DEFININING ROLLBACK METRIC
@@ -149,7 +92,8 @@ class Sprint2Stack(cdk.Stack):
         threshold=800) # THRESHOLD IS IN MILLISECONDS
         
         rollback_alarm.add_alarm_action(actions_.SnsAction(newtopic))
-        alias = lambda_.Alias(self, "Shanawar_WebHealthLambdaAlias"+construct_id,alias_name= 'Shanawar'+construct_id,version=WebHealthLambda.current_version)#)
+        version = WebHealthLambda.add_version("NewVersion")
+        alias = lambda_.Alias(self, "Shanawar_WebHealthLambdaAlias"+construct_id,alias_name="Shanawar_Lambda_Alias"+construct_id,version=version)#WebHealthLambda.current_version)
         
         """
         Parameters
@@ -176,6 +120,10 @@ class Sprint2Stack(cdk.Stack):
         )
 
 ############################################################
+ 
+        availability_alarm.add_alarm_action(actions_.SnsAction(newtopic))
+        latency_alarm.add_alarm_action(actions_.SnsAction(newtopic))
+        
  ############ LAMBDA ROLE ##############################       
     
     def create_lambda_role(self):
