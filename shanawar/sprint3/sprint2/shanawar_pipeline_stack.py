@@ -14,20 +14,20 @@ class PipelineStack(core.Stack):
         stsPolicy=aws_iam.PolicyStatement(resources=['*'],actions=['sts:*'])
 
         ############# STEP1: SOURCE is Github ##############
-        source =pipelines.CodePipelineSource.git_hub(repo_string='shanawar2021skipq/ProximaCentauri',branch='main',
+        source =pipelines.CodePipelineSource.git_hub(repo_string='shanawar2021skipq/ProximaCentauri-1',branch='main',
         authentication=core.SecretValue.secrets_manager('pipeline/shanawar',
         json_field="shanawarsecret"),
         trigger=cpactions.GitHubTrigger.POLL)
         
         ############# STEP2: BUILD ###############
-        synth = pipelines.CodeBuildStep('Shanawar_synth',input=source,
-        commands=["cd shanawar/sprint2","pip install -r requirements.txt", "npm install -g aws-cdk", "cdk synth"],
-        primary_output_directory="shanawar/sprint2/cdk.out",
+        synth = pipelines.CodeBuildStep('Shanawar_synthesizing',input=source,
+        commands=["cd shanawar/sprint3","pip install -r requirements.txt", "npm install -g aws-cdk", "cdk synth"],
+        primary_output_directory="shanawar/sprint3/cdk.out",
         role=pipelineroles,
         role_policy_statements=[iamPolicy,stsPolicy]
         )
         
-        pipeline=pipelines.CodePipeline(self,"ShanawarPipeline",pipeline_name="Shanawar_Pipeline",synth=synth)
+        pipeline=pipelines.CodePipeline(self,"ShanawarPipeline",pipeline_name="ShanawarAliPipeline",synth=synth)
 
         ############# STEP3: TEST ###############      
         beta= Sprint2Stage(self,"ShanawarBetaStack3",
@@ -42,22 +42,22 @@ class PipelineStack(core.Stack):
 
         unit_test = pipelines.CodeBuildStep(
             'unit_tests',input=source,
-            commands=["cd shanawar/sprint2","pip install -r requirements.txt", "npm install -g aws-cdk", "pytest unit_tests"],
+            commands=["cd shanawar/sprint3","pip install -r requirements.txt", "npm install -g aws-cdk", "pytest unit_tests"],
             role=pipelineroles,
             role_policy_statements=[iamPolicy,stsPolicy]
             )
             
         integration_test = pipelines.CodeBuildStep(
             'integration_tests',input=source,
-            commands=["cd shanawar/sprint2","pip install -r requirements.txt", "npm install -g aws-cdk", "pytest integration_tests"],
+            commands=["cd shanawar/sprint3","pip install -r requirements.txt", "npm install -g aws-cdk", "pytest integration_tests"],
             role=pipelineroles,
             role_policy_statements=[iamPolicy,stsPolicy]
 
             )
         pipeline.add_stage(beta, pre=[unit_test],post=[pipelines.ManualApprovalStep("Post-Beta Check")])
-        pipeline.add_stage(gamma, pre=[integration_test],post=[pipelines.ManualApprovalStep("Post-Gamma Check")]) 
+  #      pipeline.add_stage(gamma, pre=[integration_test],post=[pipelines.ManualApprovalStep("Post-Gamma Check")]) 
     ################# STEP4: PROD ###################    
-        pipeline.add_stage(prod)
+   #     pipeline.add_stage(prod)
         
 ###########################################################################
     def createrole(self):
