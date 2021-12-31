@@ -1,7 +1,7 @@
 import urllib3,datetime
 import constants as constants
 from cloudwatch_putdata import CloudWatch_PutMetric
-from resources.bucket import s3bucket 
+from bucket import s3bucket 
 
 def lambda_handler(events,context):
     values= dict()
@@ -9,23 +9,21 @@ def lambda_handler(events,context):
     s3_bucket = s3bucket()
     #s3_bucket.store_urls('shanawarbucket')
     URLS = s3_bucket.get_bucket('shanawarbucket')
-    count=1
     for url in URLS:
         avail= get_availability(url)
         dimensions=[
-            {'Name':'URL','Value': constants.URL_to_Monitor},
+            {'Name':'URL','Value': url},
         ]
-        cw.put_data(constants.URL_Monitor_Namespace,constants.URL_Monitor_Name_Availability+'  '+url+ str(count),dimensions,avail)
+        cw.put_data(constants.URL_Monitor_Namespace,constants.URL_Monitor_Name_Availability+'  '+url,dimensions,avail)
         
         
         latency= get_latency(url)
         dimensions=[
-            {'Name':'URL','Value': constants.URL_to_Monitor},
+            {'Name':'URL','Value': url},
         ]
-        cw.put_data(constants.URL_Monitor_Namespace,constants.URL_Monitor_Name_Latency+'  '+url+ str(count),dimensions,latency)
+        cw.put_data(constants.URL_Monitor_Namespace,constants.URL_Monitor_Name_Latency+'  '+url ,dimensions,latency)
         
         values.update({"Availability": avail,"Latency":latency})
-        count+=1
     return values
         
 
