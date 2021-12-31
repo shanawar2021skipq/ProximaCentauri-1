@@ -30,14 +30,14 @@ class PipelineStack(core.Stack):
         pipeline=pipelines.CodePipeline(self,"ShanawarPipeline",pipeline_name="ShanawarAliPipeline",synth=synth)
 
         ############# STEP3: TEST ###############      
-        beta= Sprint2Stage(self,"ShanawarBetaStack3",
+        beta= Sprint2Stage(self,"ShanawarBeta3",
         env={"account":"315997497220","region":"us-east-2"})
 
-        gamma= Sprint2Stage(self,"ShanawarGammaStack3",
+        gamma= Sprint2Stage(self,"ShanawarGamma3",
         env={"account":"315997497220","region":"us-east-2"})
         
 
-        prod= Sprint2Stage(self,"ShanawarProdStack3",
+        prod= Sprint2Stage(self,"ShanawarProd3",
         env={"account":"315997497220","region":"us-east-2"})
 
         unit_test = pipelines.CodeBuildStep(
