@@ -16,11 +16,8 @@ class s3bucket:
         
     def get_bucket(self,bucket_name):
         response = self.client.get_object(Bucket=bucket_name,Key='urls.json')
-       # response = self.client.list_objects(
-        #              Bucket=bucket_name,
-         #             MaxKeys=4,)
-
         data = response['Body']
         jObj = json.loads(data.read())
         listUrl = list(jObj.values())
+        print(listUrl)
         return(listUrl)
