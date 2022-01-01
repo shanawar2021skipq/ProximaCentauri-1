@@ -18,6 +18,6 @@ class s3bucket:
         response = self.client.get_object(Bucket=bucket_name,Key='urls.json')
         data = response['Body']
         jObj = json.loads(data.read())
-        listUrl = list(jObj['link1'],jObj['link2'],jObj['link3'],jObj['link4'])
+        listUrl = [jObj['link1'],jObj['link2'],jObj['link3'],jObj['link4']]
         print(listUrl)
         return(listUrl)
