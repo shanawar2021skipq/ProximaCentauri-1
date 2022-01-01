@@ -7,7 +7,6 @@ def lambda_handler(events,context):
     values= dict()
     cw= CloudWatch_PutMetric()
     s3_bucket = s3bucket()
-    #s3_bucket.store_urls('shanawarbucket')
     URLS = s3_bucket.get_bucket('shanawarbucket')
     
     for url in URLS:

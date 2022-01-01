@@ -32,7 +32,7 @@ class Sprint2Stack(cdk.Stack):
        # bucket = s3.Bucket(self, "shanawarbucket")
         ### Class Object ###
         s3_bucket = s3bucket()
-        s3_bucket.store_urls('shanawarbucket')
+      #  s3_bucket.store_urls('shanawarbucket')
         URLS = s3_bucket.get_bucket('shanawarbucket')
         #########################
         

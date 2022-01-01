@@ -2,7 +2,9 @@ import boto3
 import json
 
 client = boto3.client('s3')
-client.create_bucket(Bucket='shanawarbucket',CreateBucketConfiguration={'LocationConstraint':'us-east-2'})
+res=client.list_buckets()
+#print(res)
+#client.create_bucket(Bucket='shanawarbucket',CreateBucketConfiguration={'LocationConstraint':'us-east-2'})
 
 
 class s3bucket:
@@ -10,7 +12,7 @@ class s3bucket:
         self.client = boto3.client('s3')        #.get_object(Bucket='shanawar',Key='urls.json')
     def store_urls(self,bucket_name):
         try:
-            s3.upload_file("/resources/urls.json", bucket_name,Key='urls.json' )
+            s3.upload_file("urls.json", bucket_name,Key='urls.json' )
         except:
             print('Error in Uploading bucket')
         
