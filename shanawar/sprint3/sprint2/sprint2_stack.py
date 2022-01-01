@@ -186,7 +186,7 @@ class Sprint2Stack(cdk.Stack):
             aws_iam.ManagedPolicy.from_aws_managed_policy_name('CloudWatchFullAccess'),
             aws_iam.ManagedPolicy.from_aws_managed_policy_name("AmazonDynamoDBFullAccess"),
             aws_iam.ManagedPolicy.from_aws_managed_policy_name("AmazonSNSFullAccess"),
-            aws_iam.ManagedPolicy.from_aws_managed_policy_name("AmazonS3Access")
+            aws_iam.ManagedPolicy.from_aws_managed_policy_name("AmazonS3FullAccess")
             ])
         return lambdaRole
 
