@@ -32,7 +32,7 @@ class Sprint2Stack(cdk.Stack):
        # bucket = s3.Bucket(self, "shanawarbucket")
         ### Class Object ###
         s3_bucket = s3bucket()
-        s3_bucket.create('shanawarbucket')
+       # s3_bucket.create('shanawarbucket')
         s3_bucket.store_urls('shanawarbucket')
         URLS = s3_bucket.get_bucket('shanawarbucket')
         #########################
@@ -110,7 +110,6 @@ class Sprint2Stack(cdk.Stack):
         datapoints_to_alarm=1,
         evaluation_periods=1,
         threshold=1)
-         """
      # LATENCY ALARM     
         dimenesion= {'URL':constants.URL_to_Monitor}
         Latency_metric = cloudwatch_.Metric(
@@ -126,7 +125,8 @@ class Sprint2Stack(cdk.Stack):
         datapoints_to_alarm=1,
         evaluation_periods=1,
         threshold=0.25)
-       
+        """
+     
 #############################################################
         ############ SPRINT 2 CODE ADDITION #######
         # DEFININING ROLLBACK METRIC

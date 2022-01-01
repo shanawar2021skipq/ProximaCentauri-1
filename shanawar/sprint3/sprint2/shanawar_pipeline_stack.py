@@ -32,7 +32,7 @@ class PipelineStack(core.Stack):
         ############# STEP3: TEST ###############      
         beta= Sprint2Stage(self,"ShanawarBeta3",
         env={"account":"315997497220","region":"us-east-2"})
-
+        
         gamma= Sprint2Stage(self,"ShanawarGamma3",
         env={"account":"315997497220","region":"us-east-2"})
         
