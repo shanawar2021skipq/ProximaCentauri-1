@@ -46,26 +46,25 @@ class Sprint2Stack(cdk.Stack):
         DBLambda.add_environment('table_name',dbtable.table_name)
         
         
-        newtopic =sns.Topic(self,"Web Health by Shanawar")
+        newtopic =sns.Topic(self,"WebHealthShanawar")
         # EMAIL SUBSCRIPTION
         newtopic.add_subscription(subscriptions_.EmailSubscription('shanawar.ali.chouhdry.s@skipq.org'))
         # DYNAMODB SUBSCRIPTION
         newtopic.add_subscription(subscriptions_.LambdaSubscription(DBLambda))
         
         
-        count=1
         for url in URLS:
             
              ############################## Availability metrics and alarm for availability ###############################
             
             dimension={'URL': url}
             availability_matric=cloudwatch_.Metric(namespace=constants.URL_Monitor_Namespace,
-            metric_name = constants.URL_Monitor_Name_Availability+' '+url+str(count),
+            metric_name = constants.URL_Monitor_Name_Availability+url,
             dimensions_map=dimension,
             period=cdk.Duration.minutes(1))
             
             availability_alarm= cloudwatch_.Alarm(self,
-            id = 'Availability_Alarm'+' '+url,
+            id = 'Availability_Alarm:'+url,
             metric = availability_matric,
             comparison_operator= cloudwatch_.ComparisonOperator.LESS_THAN_THRESHOLD,
             datapoints_to_alarm=1,
@@ -78,12 +77,12 @@ class Sprint2Stack(cdk.Stack):
 
 
             latency_matric=cloudwatch_.Metric(namespace=constants.URL_Monitor_Namespace,
-            metric_name = constants.URL_Monitor_Name_Latency+' '+url+str(count),
+            metric_name = constants.URL_Monitor_Name_Latency+url,
             dimensions_map=dimension,
             period=cdk.Duration.minutes(1))
             
             latency_alarm= cloudwatch_.Alarm(self,
-            id = 'Latency_Alarm'+' '+url,
+            id = 'Latency_Alarm:'+url,
             metric = latency_matric,
             comparison_operator= cloudwatch_.ComparisonOperator.GREATER_THAN_THRESHOLD,
             datapoints_to_alarm=1,
@@ -93,9 +92,6 @@ class Sprint2Stack(cdk.Stack):
              
             availability_alarm.add_alarm_action(actions_.SnsAction(newtopic))
             latency_alarm.add_alarm_action(actions_.SnsAction(newtopic))
-            count+=1
-        
-        
 
         """ 
      # AVAILABILITY ALARM    
@@ -113,7 +109,7 @@ class Sprint2Stack(cdk.Stack):
         datapoints_to_alarm=1,
         evaluation_periods=1,
         threshold=1)
-        
+         """
      # LATENCY ALARM     
         dimenesion= {'URL':constants.URL_to_Monitor}
         Latency_metric = cloudwatch_.Metric(
@@ -129,7 +125,7 @@ class Sprint2Stack(cdk.Stack):
         datapoints_to_alarm=1,
         evaluation_periods=1,
         threshold=0.25)
-        """
+       
 #############################################################
         ############ SPRINT 2 CODE ADDITION #######
         # DEFININING ROLLBACK METRIC
