@@ -10,9 +10,12 @@ res=client.list_buckets()
 class s3bucket:
     def __init__(self):
         self.client = boto3.client('s3')        #.get_object(Bucket='shanawar',Key='urls.json')
+    def create(self,bucket_name):
+        self.client.create_bucket(Bucket=bucket_name,CreateBucketConfiguration={'LocationConstraint':'us-east-2'})
     def store_urls(self,bucket_name):
+        s3res = boto3.resource('s3')
         try:
-            s3.upload_file("urls.json", bucket_name,Key='urls.json' )
+            s3res.meta.client.upload_file("resources/urls.json", bucket_name,Key='urls.json' )
         except:
             print('Error in Uploading bucket')
         
