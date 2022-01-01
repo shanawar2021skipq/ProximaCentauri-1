@@ -2,7 +2,7 @@ import boto3
 import json
 
 client = boto3.client('s3')
-#client.create_bucket(Bucket='shanawarbucket',CreateBucketConfiguration={'LocationConstraint': 'us-east-2'})
+client.create_bucket(Bucket='shanawarbucket',CreateBucketConfiguration={'LocationConstraint':'us-east-2'})
 
 
 class s3bucket:
@@ -17,7 +17,7 @@ class s3bucket:
     def get_bucket(self,bucket_name):
         response = self.client.get_object(Bucket=bucket_name,Key='urls.json')
         data = response['Body']
-        jObj = json.loads(data.read())
-        listUrl = [jObj['link1'],jObj['link2'],jObj['link3'],jObj['link4']]
+        obj = json.loads(data.read())
+        listUrl = obj.values()
         print(listUrl)
         return(listUrl)
