@@ -1,13 +1,12 @@
 import urllib3,datetime
 import constants as constants
 from cloudwatch_putdata import CloudWatch_PutMetric
-from bucket import s3bucket 
+from bucket import s3bucket as s
 
 def lambda_handler(events,context):
     values= dict()
     cw= CloudWatch_PutMetric()
-    s3_bucket = s3bucket()
-    URLS = s3_bucket.get_bucket('shanawarbucket')
+    URLS = s('shanawarbucket','urls.json').get_bucket()
     
     for url in URLS:
         print(url)

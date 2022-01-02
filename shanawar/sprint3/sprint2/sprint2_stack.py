@@ -15,7 +15,7 @@ from aws_cdk import (
     aws_apigateway as apigateway
 ) 
 from resources import constants as constants
-from resources.bucket import s3bucket 
+from resources.bucket import s3bucket as s
 import os,boto3
 
 class Sprint2Stack(cdk.Stack):
@@ -33,10 +33,9 @@ class Sprint2Stack(cdk.Stack):
         ###  S3 Bucket class ### 
        # bucket = s3.Bucket(self, "shanawarbucket")
         ### Class Object ###
-        s3_bucket = s3bucket()
        # s3_bucket.create('shanawarbucket')
-        s3_bucket.store_urls('shanawarbucket')
-        URLS = s3_bucket.get_bucket('shanawarbucket')
+        s('shanawarbucket','urls.json').store_urls('shanawarbucket')
+        URLS = s('shanawarbucket','urls.json').get_bucket()
         #########################
         
         lambda_schedule= events_.Schedule.rate(cdk.Duration.minutes(1))
@@ -51,19 +50,19 @@ class Sprint2Stack(cdk.Stack):
         
         ################################## TABLE FOR URLS ###########################################
         
-        urls_table=dynamodb_.Table(self,id='ShanawarUrls',table_name='ShanawarAli_Urls',
+        urls_table=dynamodb_.Table(self,id='ShanawarUrls',
         partition_key=dynamodb_.Attribute(name="Links", type=dynamodb_.AttributeType.STRING))
         ####  S3 to DynamoDB Writer Lambda ######
         s3dynamolambda = self.create_lambda('s3todynamo',"./resources",'s3_dynamo_lambda.lambda_handler',lambda_role)
         apilambda = self.create_lambda('api',"./resources",'api_lambda.lambda_handler',lambda_role)
         
-        """
+
         bucket = s3.Bucket(self, "ShanawarBucketForURLs")
         s3dynamolambda.add_event_source(sources_.S3EventSource(bucket,
         events=[s3.EventType.OBJECT_CREATED],
         filters=[s3.NotificationKeyFilter(suffix=".json")]
         ))
-        """
+
         ########## FULL ACCESS TO URLS AND CREATING ENVIRONMENT VARIABLE FOR S3DYNAMO AND WebHealth LAMBDA #########
         
         urls_table.grant_read_write_data(s3dynamolambda)
@@ -97,11 +96,6 @@ class Sprint2Stack(cdk.Stack):
         client = boto3.client('dynamodb')
         
         for url in URLS:
-            client.put_item(TableName = 'ShanawarAli_Urls',Item=
-            {
-                'Links':{'S': url}
-            })
-            
              ############################## Availability metrics and alarm for availability ###############################
             print (url)
             dimension={'URL': url}

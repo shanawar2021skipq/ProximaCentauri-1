@@ -8,8 +8,8 @@ res=client.list_buckets()
 
 
 class s3bucket:
-    def __init__(self):
-        self.client = boto3.client('s3')        #.get_object(Bucket='shanawar',Key='urls.json')
+    def __init__(self,bucket_name,key):
+        self.client = boto3.client('s3').get_object(s3bucket=bucket_name,Key=key)        #.get_object(Bucket='shanawar',Key='urls.json')
     def create(self,bucket_name):
         self.client.create_bucket(Bucket=bucket_name,CreateBucketConfiguration={'LocationConstraint':'us-east-2'})
     def store_urls(self,bucket_name):
@@ -19,9 +19,9 @@ class s3bucket:
         except:
             print('Error in Uploading bucket')
         
-    def get_bucket(self,bucket_name):
-        response = self.client.get_object(Bucket=bucket_name,Key='urls.json')
-        data = response['Body']
+    def get_bucket(self):
+        response = self.client['Body']#.get_object(Bucket=bucket_name,Key=key)
+        data = response
         obj = json.loads(data.read())
         listUrl = obj.values()
         print(listUrl)
