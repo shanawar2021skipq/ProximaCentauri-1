@@ -1,5 +1,5 @@
 import boto3,os
-from bucket import s3bucket as s
+from bucket import Bucket as s
 
 def lambda_handler(event,context):
    # s3obj=s3bucket()

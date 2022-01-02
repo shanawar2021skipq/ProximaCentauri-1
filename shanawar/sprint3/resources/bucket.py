@@ -7,9 +7,9 @@ res=client.list_buckets()
 #client.create_bucket(Bucket='shanawarbucket',CreateBucketConfiguration={'LocationConstraint':'us-east-2'})
 
 
-class s3bucket:
+class Bucket():
     def __init__(self,bucket_name,key):
-        self.client = boto3.client('s3').get_object(s3bucket=bucket_name,Key=key)        #.get_object(Bucket='shanawar',Key='urls.json')
+        self.client = boto3.client('s3').get_object(Bucket=bucket_name,Key=key)        #.get_object(Bucket='shanawar',Key='urls.json')
     def create(self,bucket_name):
         self.client.create_bucket(Bucket=bucket_name,CreateBucketConfiguration={'LocationConstraint':'us-east-2'})
     def store_urls(self,bucket_name):

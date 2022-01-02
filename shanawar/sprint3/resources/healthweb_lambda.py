@@ -1,7 +1,7 @@
 import urllib3,datetime
 import constants as constants
 from cloudwatch_putdata import CloudWatch_PutMetric
-from bucket import s3bucket as s
+from bucket import Bucket as s
 
 def lambda_handler(events,context):
     values= dict()

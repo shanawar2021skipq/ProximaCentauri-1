@@ -15,7 +15,7 @@ from aws_cdk import (
     aws_apigateway as apigateway
 ) 
 from resources import constants as constants
-from resources.bucket import s3bucket as s
+from resources.bucket import Bucket as s
 import os,boto3
 
 class Sprint2Stack(cdk.Stack):
