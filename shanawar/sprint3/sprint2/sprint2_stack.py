@@ -51,27 +51,40 @@ class Sprint2Stack(cdk.Stack):
         
         ################################## TABLE FOR URLS ###########################################
         
-        urls_table=dynamodb_.Table(self,id='ShanawarUrls',
+        urls_table=dynamodb_.Table(self,id='ShanawarUrls',table_name='ShanawarAli_Urls',
         partition_key=dynamodb_.Attribute(name="Links", type=dynamodb_.AttributeType.STRING))
         ####  S3 to DynamoDB Writer Lambda ######
         s3dynamolambda = self.create_lambda('s3todynamo',"./resources",'s3_dynamo_lambda.lambda_handler',lambda_role)
         apilambda = self.create_lambda('api',"./resources",'api_lambda.lambda_handler',lambda_role)
         
+        """
         bucket = s3.Bucket(self, "ShanawarBucketForURLs")
         s3dynamolambda.add_event_source(sources_.S3EventSource(bucket,
         events=[s3.EventType.OBJECT_CREATED],
         filters=[s3.NotificationKeyFilter(suffix=".json")]
         ))
-        
+        """
         ########## FULL ACCESS TO URLS AND CREATING ENVIRONMENT VARIABLE FOR S3DYNAMO AND WebHealth LAMBDA #########
         
-        urls_table.grant_full_access(s3dynamolambda)
-        urls_table.grant_full_access(WebHealthLambda)
+        urls_table.grant_read_write_data(s3dynamolambda)
+        urls_table.grant_read_write_data(WebHealthLambda)
         s3dynamolambda.add_environment(key = 'url_table_name', value =urls_table.table_name )
         WebHealthLambda.add_environment(key = 'url_table_name', value = urls_table.table_name)
         
         #########################   API #################################
-        apigateway.LambdaRestApi(self,"shanawar_api",handler=apilambda)
+        myapi=apigateway.LambdaRestApi(self,"shanawar_api",handler=apilambda)
+        apilambda.add_environment(key = 'url_table_name', value = urls_table.table_name)
+        
+        ################################# creating API gateway ###################
+        
+        
+        apilambda.grant_invoke( aws_iam.ServicePrincipal("apigateway.amazonaws.com"))
+        urls_table.grant_read_write_data(apilambda) 
+                
+        items = myapi.root.add_resource("items")
+        items.add_method("GET") # GET /items
+        items.add_method("PUT") #  Allowed methods: ANY,OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD POST /items
+        items.add_method("DELETE")
 
         ##############################################################################################
         

@@ -7,20 +7,19 @@ def lambda_handler(event,context):
     print('URLS in s3_dynamo_lambda retreived',URLS)
     client = boto3.client('dynamodb')
         #################### S3 event ########################
-    
-   # BucketName = event['Records'][0]['s3']['bucket']['name']
-#    key = event['Records'][0]['s3']['object']['key']
- #   print(str(event))
-  #  print(key)
-   # print(BucketName)
-    
+    """
+    BucketName = event['Records'][0]['s3']['bucket']['name']
+    key = event['Records'][0]['s3']['object']['key']
+    print(str(event))
+    print(key)
+    print(BucketName)
+    """
         ###################### table name #######################
     
     urltable = os.getenv(key = 'url_table_name')#getting table name
-    
-    for url in URLS:
+    print('THE URL TABLE NAME:',urltable)
+    for link in URLS:
         client.put_item(TableName = urltable,Item=
         {
-            'URLLinks':{'S': url}
+            'Links':{'S': link}
         })
-    return 'Successfully Added Urls in Dynamo'
