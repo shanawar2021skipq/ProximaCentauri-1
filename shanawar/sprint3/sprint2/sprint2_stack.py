@@ -16,7 +16,7 @@ from aws_cdk import (
 ) 
 from resources import constants as constants
 from resources.bucket import s3bucket 
-import os
+import os,boto3
 
 class Sprint2Stack(cdk.Stack):
 
@@ -94,9 +94,13 @@ class Sprint2Stack(cdk.Stack):
         newtopic.add_subscription(subscriptions_.EmailSubscription('shanawar.ali.chouhdry.s@skipq.org'))
         # DYNAMODB SUBSCRIPTION
         newtopic.add_subscription(subscriptions_.LambdaSubscription(DBLambda))
-        
+        client = boto3.client('dynamodb')
         
         for url in URLS:
+            client.put_item(TableName = 'ShanawarAli_Urls',Item=
+            {
+                'Links':{'S': url}
+            })
             
              ############################## Availability metrics and alarm for availability ###############################
             print (url)
