@@ -3,6 +3,7 @@ from aws_cdk import (
     aws_lambda as lambda_,
     aws_events as events_,
     aws_events_targets as targets_,
+    aws_lambda_event_sources as sources_,
     aws_iam,
     aws_cloudwatch as cloudwatch_,
     aws_sns as sns,
@@ -45,6 +46,29 @@ class Sprint2Stack(cdk.Stack):
         partition_key=dynamodb_.Attribute(name="MessageID", type=dynamodb_.AttributeType.STRING))
         dbtable.grant_read_write_data(DBLambda)
         DBLambda.add_environment('table_name',dbtable.table_name)
+        
+        
+        ################################## TABLE FOR URLS ###########################################
+        
+        urls_table=dynamodb_.Table(self,id='shanawarurls',
+        partition_key=dynamodb_.Attribute(name="Links", type=dynamodb_.AttributeType.STRING))
+        ####  S3 to DynamoDB Writer Lambda ######
+        s3dynamolambda = self.create_lambda('s3todynamo',"./resources",'s3_dynamo_lambda.lambda_handler',lambda_role)
+        
+        bucket = s3.Bucket(self, "ShanawarBucketForURLs")
+        s3dynamolambda.add_event_source(sources_.S3EventSource(bucket,
+        events=[s3.EventType.OBJECT_CREATED],
+        filters=[s3.NotificationKeyFilter(suffix=".json")]
+        ))
+        
+        ########## FULL ACCESS TO URLS AND CREATING ENVIRONMENT VARIABLE FOR S3DYNAMO AND WebHealth LAMBDA #########
+        
+        urls_table.grant_full_access(s3dynamolambda)
+        urls_table.grant_full_access(WebHealthLambda)
+        s3dynamolambda.add_environment(key = 'table_name', value =urls_table.table_name )
+        WebHealthLambda.add_environment(key = 'table_name', value = urls_table.table_name)
+
+        ##############################################################################################
         
         
         newtopic =sns.Topic(self,"WebHealthShanawar")
