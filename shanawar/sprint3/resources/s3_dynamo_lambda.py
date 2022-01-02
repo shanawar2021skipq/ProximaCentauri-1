@@ -17,8 +17,9 @@ def lambda_handler(event,context):
         ###################### table name #######################
     URLS= s(BucketName,key).get_bucket()
     print('URLS in s3_dynamo_lambda retreived',URLS)
-    urltable = os.getenv(key = 'url_table_name')#getting table name
+    urltable = os.getenv(key = 'table_name')#getting table name
     print('THE URL TABLE NAME:',urltable)
+    u=['www.skipq.org','www.netflix.com','www.slack.com','www.facebook.com']
     for link in URLS:
         client.put_item(TableName = urltable,Item=
         {

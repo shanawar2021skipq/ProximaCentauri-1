@@ -1,24 +1,44 @@
 import boto3,os
-from dynamofunc import dynamofn
-def lambda_handler(events,context):
-    dynamofunctions=dynamofn()
-    method=events['httpMethod']
-    body=events['body']
+import read as dynamo_RW
+
+client = boto3.client('dynamodb')
+
+def lambda_handler(events, context):
+    client = boto3.client('dynamodb')
     
-    table=os.getenv('url_table_name')
+    if events['httpMethod'] == 'GET':
+        
+        data = dynamo_RW.ReadFromTable(os.getenv(key = 'table_name'))
+        response_msg = f"data from table is = {data} "
     
-    if (method=='GET'):
-        response=dynamofunctions.scan(table)
-        URLS=[]
-        for url in response['Items']:
-            URLS.append(url['url']['S'])
-        return URLS
+    elif events['httpMethod'] == 'PUT':
         
-    elif (method=='PUT'):
-        return dynamofunctions.add(table,{'url':body})
         
-    elif (method=='DELETE'):
-        return dynamofunctions.deletion(table,body)
+        new_url = events['body']
+        client.put_item(
+        TableName = os.getenv(key='table_name'),
+        Item={
+        'Links':{'S' : new_url},
+        })
+        response_msg = f"Url = {events['body']} is successfully added into the table"
+        
+    elif events['httpMethod'] == 'DELETE':
+    
+        new_url = events['body']
+        print(new_url)
+        client.delete_item(
+        TableName = os.getenv(key='table_name'),
+        Key={
+        'Links':{'S' : new_url}
+        })
+        response_msg = f"Url= {events['body']} is successfully deleted from the table"
     else:
-        return ("Method UNDEFINED")
-            
+        
+        response_msg = 'You can only put a item in table, delete it or get items from table'
+    print(response_msg)  
+    return {
+        
+        'statusCode' : 200,
+        'body'  :  response_msg
+        
+    }

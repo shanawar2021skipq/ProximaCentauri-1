@@ -67,12 +67,12 @@ class Sprint2Stack(cdk.Stack):
         
         urls_table.grant_read_write_data(s3dynamolambda)
         urls_table.grant_read_write_data(WebHealthLambda)
-        s3dynamolambda.add_environment(key = 'url_table_name', value =urls_table.table_name )
-        WebHealthLambda.add_environment(key = 'url_table_name', value = urls_table.table_name)
+        s3dynamolambda.add_environment(key = 'table_name', value =urls_table.table_name )
+        WebHealthLambda.add_environment(key = 'table_name', value = urls_table.table_name)
         
         #########################   API #################################
         myapi=apigateway.LambdaRestApi(self,"shanawarapi",handler=apilambda)
-        apilambda.add_environment(key = 'url_table_name', value = urls_table.table_name)
+        apilambda.add_environment(key = 'table_name', value = urls_table.table_name)
         
         ################################# creating API gateway ###################
         
@@ -170,6 +170,7 @@ class Sprint2Stack(cdk.Stack):
 #############################################################
         ############ SPRINT 2 CODE ADDITION #######
         # DEFININING ROLLBACK METRIC
+        """
         rollback_metric=cloudwatch_.Metric(
         namespace='AWS/Lambda',
         metric_name='Duration',
@@ -187,7 +188,7 @@ class Sprint2Stack(cdk.Stack):
         
         rollback_alarm.add_alarm_action(actions_.SnsAction(newtopic))
         alias = lambda_.Alias(self, "Shanawar_WebHealthLambdaAlias"+construct_id,alias_name= 'Shanawar'+construct_id,version=WebHealthLambda.current_version)#)
-        
+        """
         """
         Parameters
         scope (Construct) –
@@ -205,13 +206,13 @@ class Sprint2Stack(cdk.Stack):
         """
         # Linear: Traffic is shifted in equal increments with an equal number of minutes between each increment. 
         # linear options specify the percentage of traffic that's shifted in each increment and the number of minutes between each increment.
-
+        """
         codedeploy.LambdaDeploymentGroup(self, "Shanawar_WebHealthLambda_DeploymentGroup",
         alias=alias,
         deployment_config=codedeploy.LambdaDeploymentConfig.LINEAR_10_PERCENT_EVERY_1_MINUTE,   
         alarms=[rollback_alarm]
         )
-
+        """
 ############################################################
  ############ LAMBDA ROLE ##############################       
     
