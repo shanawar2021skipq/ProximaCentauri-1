@@ -1,9 +1,10 @@
 import boto3,os
 from bucket import s3bucket
 
-s3obj=s3bucket()
-URLS = s3obj.get_bucket('shanawarbucket')
 def lambda_handler(event,context):
+    s3obj=s3bucket()
+    URLS = s3obj.get_bucket('shanawarbucket')
+    print('URLS in s3_dynamo_lambda retreived',URLS)
     client = boto3.client('dynamodb')
         #################### S3 event ########################
     
