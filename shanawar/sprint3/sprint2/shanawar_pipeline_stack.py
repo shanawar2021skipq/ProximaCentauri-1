@@ -32,7 +32,7 @@ class PipelineStack(core.Stack):
         ############# STEP3: TEST ###############      
         beta= Sprint2Stage(self,"ShanawarBeta3",
         env={"account":"315997497220","region":"us-east-2"})
-        
+        """
         gamma= Sprint2Stage(self,"ShanawarGamma3",
         env={"account":"315997497220","region":"us-east-2"})
         
@@ -52,8 +52,8 @@ class PipelineStack(core.Stack):
             commands=["cd shanawar/sprint3","pip install -r requirements.txt", "npm install -g aws-cdk", "pytest integration_tests"],
             role=pipelineroles,
             role_policy_statements=[iamPolicy,stsPolicy]
-
             )
+        """
         pipeline.add_stage(beta)#, pre=[unit_test],post=[pipelines.ManualApprovalStep("Post-Beta Check")])
   #      pipeline.add_stage(gamma, pre=[integration_test],post=[pipelines.ManualApprovalStep("Post-Gamma Check")]) 
     ################# STEP4: PROD ###################    

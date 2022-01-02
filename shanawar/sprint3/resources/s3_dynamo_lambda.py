@@ -16,11 +16,11 @@ def lambda_handler(event,context):
     
         ###################### table name #######################
     
-    urltable = os.getenv(key = 'table_name')#getting table name
+    urltable = os.getenv(key = 'url_table_name')#getting table name
     
     for url in URLS:
-        client.put_item(
-        TableName = urltable,
-        Item={'URLLinks':{'S': url}
+        client.put_item(TableName = urltable,Item=
+        {
+            'URLLinks':{'S': url}
         })
     return 'Successfully Added Urls in Dynamo'

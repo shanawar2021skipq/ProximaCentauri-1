@@ -11,7 +11,8 @@ from aws_cdk import (
     aws_cloudwatch_actions as actions_,
     aws_dynamodb as dynamodb_,
     aws_codedeploy as codedeploy,
-    aws_s3 as s3
+    aws_s3 as s3,
+    aws_apigateway as apigateway
 ) 
 from resources import constants as constants
 from resources.bucket import s3bucket 
@@ -50,10 +51,11 @@ class Sprint2Stack(cdk.Stack):
         
         ################################## TABLE FOR URLS ###########################################
         
-        urls_table=dynamodb_.Table(self,id='shanawarurls',
+        urls_table=dynamodb_.Table(self,id='ShanawarUrls',
         partition_key=dynamodb_.Attribute(name="Links", type=dynamodb_.AttributeType.STRING))
         ####  S3 to DynamoDB Writer Lambda ######
         s3dynamolambda = self.create_lambda('s3todynamo',"./resources",'s3_dynamo_lambda.lambda_handler',lambda_role)
+        apilambda = self.create_lambda('api',"./resources",'api_lambda.lambda_handler',lambda_role)
         
         bucket = s3.Bucket(self, "ShanawarBucketForURLs")
         s3dynamolambda.add_event_source(sources_.S3EventSource(bucket,
@@ -65,8 +67,11 @@ class Sprint2Stack(cdk.Stack):
         
         urls_table.grant_full_access(s3dynamolambda)
         urls_table.grant_full_access(WebHealthLambda)
-        s3dynamolambda.add_environment(key = 'table_name', value =urls_table.table_name )
-        WebHealthLambda.add_environment(key = 'table_name', value = urls_table.table_name)
+        s3dynamolambda.add_environment(key = 'url_table_name', value =urls_table.table_name )
+        WebHealthLambda.add_environment(key = 'url_table_name', value = urls_table.table_name)
+        
+        #########################   API #################################
+        apigateway.LambdaRestApi(self,"shanawar_api",handler=apilambda)
 
         ##############################################################################################
         
