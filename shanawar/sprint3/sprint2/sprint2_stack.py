@@ -59,8 +59,7 @@ class Sprint2Stack(cdk.Stack):
         
 
         bucket = s3.Bucket(self, "ShanawarBucketForURLs")
-        s3dynamolambda.add_event_source(sources_.S3EventSource(bucket,events=[s3.EventType.OBJECT_CREATED],filters=[s3.NotificationKeyFilter(suffix=".json")]))
-
+        s3dynamolambda.add_event_source(sources_.S3EventSource(bucket,events=[s3.EventType.OBJECT_CREATED]))
         ########## FULL ACCESS TO URLS AND CREATING ENVIRONMENT VARIABLE FOR S3DYNAMO AND WebHealth LAMBDA #########
         
         urls_table.grant_read_write_data(s3dynamolambda)
