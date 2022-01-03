@@ -7,6 +7,7 @@ def lambda_handler(event,context):
  #   print('URLS in s3_dynamo_lambda retreived',URLS)
     client = boto3.client('dynamodb')
         #################### S3 event ########################
+    print("HI I'm in S3. Can you see me in cloudwatch?")
     """
     BucketName = event['Records'][0]['s3']['bucket']['name']
     key = event['Records'][0]['s3']['object']['key']
@@ -16,7 +17,7 @@ def lambda_handler(event,context):
     """
     BucketName='shanawarbucket'
     key = 'urls.json'
-    
+
         ###################### table name #######################
     URLS= s(BucketName,key).get_bucket()
     print('URLS in s3_dynamo_lambda retreived',URLS)

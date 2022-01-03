@@ -7,21 +7,21 @@ def lambda_handler(events,context):
     values= dict()
     cw= CloudWatch_PutMetric()
     URLS = s('shanawarbucket','urls.json').get_bucket()
-    
-    for i in range(len(URLS)):
-        print(URLS[i])
-        avail= get_availability(URLS[i])
+    print( 'URLS IN WEBHEALTH LAMBDA', URLS)
+    for url in URLS:
+        print(url)
+        avail= get_availability(url)
         dimensions=[
-            {'Name':'URL','Value': URLS[i]},
+            {'Name':'URL','Value': url},
         ]
-        cw.put_data(constants.URL_Monitor_Namespace,constants.URL_Monitor_Name_Availability+URLS[i],dimensions,avail)
+        cw.put_data(constants.URL_Monitor_Namespace,constants.URL_Monitor_Name_Availability+url,dimensions,avail)
         
         
-        latency= get_latency(URLS[i])
+        latency= get_latency(url)
         dimensions=[
-            {'Name':'URL','Value': URLS[i]},
+            {'Name':'URL','Value': url},
         ]
-        cw.put_data(constants.URL_Monitor_Namespace,constants.URL_Monitor_Name_Latency+URLS[i] ,dimensions,latency)
+        cw.put_data(constants.URL_Monitor_Namespace,constants.URL_Monitor_Name_Latency+url ,dimensions,latency)
         
         values.update({"Availability": avail,"Latency":latency})
     return values

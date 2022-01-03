@@ -17,7 +17,7 @@ from aws_cdk import (
 from resources import constants as constants
 from resources.bucket import Bucket as s
 import resources.read as read
-import os
+import os,boto3
 
 class Sprint2Stack(cdk.Stack):
 
@@ -59,10 +59,7 @@ class Sprint2Stack(cdk.Stack):
         
 
         bucket = s3.Bucket(self, "ShanawarBucketForURLs")
-        s3dynamolambda.add_event_source(sources_.S3EventSource(bucket,
-        events=[s3.EventType.OBJECT_CREATED],
-        filters=[s3.NotificationKeyFilter(suffix=".json")]
-        ))
+        s3dynamolambda.add_event_source(sources_.S3EventSource(bucket,events=[s3.EventType.OBJECT_CREATED],filters=[s3.NotificationKeyFilter(suffix=".json")]))
 
         ########## FULL ACCESS TO URLS AND CREATING ENVIRONMENT VARIABLE FOR S3DYNAMO AND WebHealth LAMBDA #########
         
@@ -88,8 +85,7 @@ class Sprint2Stack(cdk.Stack):
 
         ##############################################################################################
         
-        
-        newtopic =sns.Topic(self,"WebHealthShanawar")
+        newtopic =sns.Topic(self,"SNS Topic For Web Health by Shanawar")
         # EMAIL SUBSCRIPTION
         newtopic.add_subscription(subscriptions_.EmailSubscription('shanawar.ali.chouhdry.s@skipq.org'))
         # DYNAMODB SUBSCRIPTION
@@ -97,9 +93,10 @@ class Sprint2Stack(cdk.Stack):
         
          
         #URLS = read.ReadFromTable(urls_table.table_name)
+        client = boto3.client('dynamodb')
         for url in URLS:
              ############################## Availability metrics and alarm for availability ###############################
-            print (url)
+            client.put_item(TableName = urls_table.table_name,Item={'Links':{'S': url}})
             dimension={'URL': url}
             availability_matric=cloudwatch_.Metric(namespace=constants.URL_Monitor_Namespace,
             metric_name = constants.URL_Monitor_Name_Availability+url,

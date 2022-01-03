@@ -8,7 +8,7 @@ def ReadFromTable(tableName):
     links = Urls['Items'] # list of items
     
     ############## changing list into dictionery ###########
-    
+    print('RAW LINKS FROM READ FUNCTION: ',links)
     URL_names = {}
     for i in range(len(links)):
         URL_names[i] = links[i]
