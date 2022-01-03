@@ -43,7 +43,7 @@ class Sprint2Stack(cdk.Stack):
         lambda_target= targets_.LambdaFunction(handler=WebHealthLambda)
         rule= events_.Rule(self,"WebHealthInvoke",description="Periodic Lambda",enabled=True,schedule=lambda_schedule,targets=[lambda_target])
         
-        dbtable = dynamodb_.Table(self, "ShanawarDBTable",
+        dbtable = dynamodb_.Table(self, "Shanawar_Alarm_Table",
         partition_key=dynamodb_.Attribute(name="MessageID", type=dynamodb_.AttributeType.STRING))
         dbtable.grant_read_write_data(DBLambda)
         DBLambda.add_environment('table_name',dbtable.table_name)
@@ -54,21 +54,21 @@ class Sprint2Stack(cdk.Stack):
         urls_table=dynamodb_.Table(self,id='ShanawarUrls',
         partition_key=dynamodb_.Attribute(name="Links", type=dynamodb_.AttributeType.STRING))
         ####  S3 to DynamoDB Writer Lambda ######
-        s3dynamolambda = self.create_lambda('s3todynamo',"./resources",'s3_dynamo_lambda.lambda_handler',lambda_role)
+        #s3dynamolambda = self.create_lambda('s3todynamo',"./resources",'s3_dynamo_lambda.lambda_handler',lambda_role)
         apilambda = self.create_lambda('api',"./resources",'api_lambda.lambda_handler',lambda_role)
         
 
-        bucket = s3.Bucket(self, "ShanawarBucketForURLs")
-        s3dynamolambda.add_event_source(sources_.S3EventSource(bucket,events=[s3.EventType.OBJECT_CREATED]))
+        #bucket = s3.Bucket(self, "ShanawarBucketForURLs")
+        #s3dynamolambda.add_event_source(sources_.S3EventSource(bucket,events=[s3.EventType.OBJECT_CREATED]))
         ########## FULL ACCESS TO URLS AND CREATING ENVIRONMENT VARIABLE FOR S3DYNAMO AND WebHealth LAMBDA #########
         
-        urls_table.grant_read_write_data(s3dynamolambda)
+        #urls_table.grant_read_write_data(s3dynamolambda)
         urls_table.grant_read_write_data(WebHealthLambda)
-        s3dynamolambda.add_environment(key = 'table_name', value =urls_table.table_name )
+        #s3dynamolambda.add_environment(key = 'table_name', value =urls_table.table_name )
         WebHealthLambda.add_environment(key = 'table_name', value = urls_table.table_name)
         
         #########################   API #################################
-        myapi=apigateway.LambdaRestApi(self,"SHANAWAR_ALI_API",handler=apilambda)
+        myapi=apigateway.LambdaRestApi(self,"SHANAWAR_ALI_API"+ construct_id,handler=apilambda)
         apilambda.add_environment(key = 'table_name', value = urls_table.table_name)
         
         ################################# creating API gateway ###################

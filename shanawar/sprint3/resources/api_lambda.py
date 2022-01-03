@@ -14,7 +14,6 @@ def lambda_handler(events, context):
     urltable = os.getenv(key = 'table_name')#getting table name
     print('THE URL TABLE NAME in API LAMBDA:',urltable)
     
-    u=['www.skipq.org','www.netflix.com','www.slack.com','www.facebook.com']
     for link in URLS:
         client.put_item(TableName = urltable,Item=
         {
@@ -26,13 +25,13 @@ def lambda_handler(events, context):
     method = events['httpMethod']
     
     if method == 'GET':
-        data = read.ReadFromTable(os.getenv(key = 'table_name'))
+        data = read.ReadFromTable(urltable)
         response = f"URLS = {data} "
     
     elif method == 'PUT':
         new_url = events['body']
         client.put_item(
-        TableName = os.getenv(key='table_name'),
+        TableName = urltable,
         Item={
         'Links':{'S' : new_url},
         })
@@ -42,7 +41,7 @@ def lambda_handler(events, context):
         new_url = events['body']
         print(new_url)
         client.delete_item(
-        TableName = os.getenv(key='table_name'),
+        TableName =urltable,
         Key={
         'Links':{'S' : new_url}
         })
@@ -54,8 +53,6 @@ def lambda_handler(events, context):
     print(response) 
     
     return {
-        
         'statusCode' : 200,
         'body'  :  response
-        
     }
