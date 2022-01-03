@@ -4,10 +4,7 @@ def ReadFromTable(tableName):
     client = boto3.client('dynamodb')
     
     ########################## Scaning values from DB table ###########
-    Urls = client.scan(
-            TableName=tableName,
-            AttributesToGet=[
-            'Links'])
+    Urls = client.scan(TableName=tableName,AttributesToGet=['Links'])
     links = Urls['Items'] # list of items
     
     ############## changing list into dictionery ###########
@@ -21,6 +18,5 @@ def ReadFromTable(tableName):
     names = []
     for j in range(len(URL_names)):
        names.append(URL_names[j]['Links']['S'])
-    
     print(names)
     return names

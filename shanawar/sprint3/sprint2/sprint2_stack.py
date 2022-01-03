@@ -16,7 +16,8 @@ from aws_cdk import (
 ) 
 from resources import constants as constants
 from resources.bucket import Bucket as s
-import os,boto3
+import resources.read as read
+import os
 
 class Sprint2Stack(cdk.Stack):
 
@@ -93,8 +94,9 @@ class Sprint2Stack(cdk.Stack):
         newtopic.add_subscription(subscriptions_.EmailSubscription('shanawar.ali.chouhdry.s@skipq.org'))
         # DYNAMODB SUBSCRIPTION
         newtopic.add_subscription(subscriptions_.LambdaSubscription(DBLambda))
-        client = boto3.client('dynamodb')
         
+         
+        URLS = read.ReadFromTable(urls_table.table_name)
         for url in URLS:
              ############################## Availability metrics and alarm for availability ###############################
             print (url)
@@ -113,10 +115,7 @@ class Sprint2Stack(cdk.Stack):
             threshold = 1
             )
             
-            
-             ############################## Latency Metrics and Latency alarms ###############################
-
-
+             ############################## Latency Metrics and Latency alarms ##############################
             latency_matric=cloudwatch_.Metric(namespace=constants.URL_Monitor_Namespace,
             metric_name = constants.URL_Monitor_Name_Latency+url,
             dimensions_map=dimension,
@@ -150,6 +149,7 @@ class Sprint2Stack(cdk.Stack):
         datapoints_to_alarm=1,
         evaluation_periods=1,
         threshold=1)
+        
      # LATENCY ALARM     
         dimenesion= {'URL':constants.URL_to_Monitor}
         Latency_metric = cloudwatch_.Metric(
@@ -238,5 +238,6 @@ class Sprint2Stack(cdk.Stack):
         runtime=lambda_.Runtime.PYTHON_3_6, 
         handler=handler,
         code=lambda_.Code.from_asset(asset),
+        timeout=cdk.Duration.minutes(5),
         role=role)
  ########################################################    
