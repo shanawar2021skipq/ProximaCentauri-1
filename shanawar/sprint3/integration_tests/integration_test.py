@@ -1,4 +1,4 @@
-import pytest ,urllib3
+import pytest ,urllib3,requests
 assert 2==2
 """
 api='https://pjwprn6s69.execute-api.us-east-2.amazonaws.com/prod'
