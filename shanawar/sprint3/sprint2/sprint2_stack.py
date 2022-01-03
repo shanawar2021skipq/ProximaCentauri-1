@@ -96,7 +96,7 @@ class Sprint2Stack(cdk.Stack):
         client = boto3.client('dynamodb')
         for url in URLS:
              ############################## Availability metrics and alarm for availability ###############################
-            client.put_item(TableName = urls_table.table_name,Item={'Links':{'S': url}})
+            #client.put_item(TableName = ,Item={'Links':{'S': url}})
             dimension={'URL': url}
             availability_matric=cloudwatch_.Metric(namespace=constants.URL_Monitor_Namespace,
             metric_name = constants.URL_Monitor_Name_Availability+url,

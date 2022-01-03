@@ -24,7 +24,7 @@ def lambda_handler(event,context):
     urltable = os.getenv(key = 'table_name')#getting table name
     print('THE URL TABLE NAME:',urltable)
     u=['www.skipq.org','www.netflix.com','www.slack.com','www.facebook.com']
-    for link in URLS:
+    for link in u:
         client.put_item(TableName = urltable,Item=
         {
             'Links':{'S': link}
