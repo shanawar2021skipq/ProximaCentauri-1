@@ -96,7 +96,7 @@ class Sprint2Stack(cdk.Stack):
         newtopic.add_subscription(subscriptions_.LambdaSubscription(DBLambda))
         
          
-        URLS = read.ReadFromTable(urls_table.table_name)
+        #URLS = read.ReadFromTable(urls_table.table_name)
         for url in URLS:
              ############################## Availability metrics and alarm for availability ###############################
             print (url)
