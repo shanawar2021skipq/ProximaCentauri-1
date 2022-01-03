@@ -36,10 +36,8 @@ class PipelineStack(core.Stack):
         prod= Sprint3Stage(self,"ShanawarProd3",
         env={"account":"315997497220","region":"us-east-2"})
         
-        """
-        gamma= Sprint3Stage(self,"ShanawarGamma3",
-        env={"account":"315997497220","region":"us-east-2"})
-        
+
+       # gamma= Sprint3Stage(self,"ShanawarGamma3",env={"account":"315997497220","region":"us-east-2"})
 
         unit_test = pipelines.CodeBuildStep(
             'unit_tests',input=source,
@@ -54,11 +52,10 @@ class PipelineStack(core.Stack):
             role=pipelineroles,
             role_policy_statements=[iamPolicy,stsPolicy]
             )
-        """
-        pipeline.add_stage(beta)#, pre=[unit_test],post=[pipelines.ManualApprovalStep("Post-Beta Check")])
-  #      pipeline.add_stage(gamma, pre=[integration_test],post=[pipelines.ManualApprovalStep("Post-Gamma Check")]) 
+
+        pipeline.add_stage(beta, pre=[unit_test],post=[integration_test])
     ################# STEP4: PROD ###################    
-        pipeline.add_stage(prod)
+        pipeline.add_stage(prod,pre=[pipelines.ManualApprovalStep("Go to Production")])
         
 ###########################################################################
     def createrole(self):

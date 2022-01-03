@@ -1,25 +1,29 @@
 import pytest 
 from aws_cdk import core
-from sprint2.sprint2_stack import Sprint2Stack
+from sprint3.sprint3_stack import Sprint3Stack
 
-#### Unit Test that checks permissions ##########    
-def test_permission():
-    app=core.App()
-    Sprint2Stack(app,'TestStack')
-    template=app.synth().get_stack_by_name('TestStack').template
-    permission=[resource for resource in template['Resources'].values() if resource['Type']=='AWS::Lambda::Permission']
+app=core.App()
+Sprint3Stack(app,'TestStack')
+template=app.synth().get_stack_by_name('TestStack').template
 
-    assert len(permission)==2    
+#### Unit Test that checks number of tables ##########    
+def test_table():
+    tables=[resource for resource in template['Resources'].values() if resource['Type']=='AWS::DynamoDB::Table']
+    assert len(tables)==2    
 
 #######################################################
 #### Unit Test that checks Lambda Functions ##########    
 
 def test_lambda():
 
-    app=core.App()
-    Sprint2Stack(app,'TestStack')
     template=app.synth().get_stack_by_name('TestStack').template
-    codebuild=[resource for resource in template['Resources'].values() if resource['Type']=='AWS::Lambda::Function']
+    lambdas=[resource for resource in template['Resources'].values() if resource['Type']=='AWS::Lambda::Function']
 
-    assert len(codebuild)==2    
+    assert len(lambdas)==3    
 ####################################################
+
+def test_api():
+    
+    template=app.synth().get_stack_by_name('TestStack').template
+    api=[resource for resource in template['Resources'].values() if resource['Type']=='AWS::ApiGateway::RestApi']
+    assert len(api)==1

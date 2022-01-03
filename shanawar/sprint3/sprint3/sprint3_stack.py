@@ -31,8 +31,7 @@ class Sprint3Stack(cdk.Stack):
         DBLambda = self.create_lambda("DynamoDBLambda","./resources","dynamodb_lambda.lambda_handler",lambda_role) 
         
         
-        ###  S3 Bucket class ### 
-       # bucket = s3.Bucket(self, "shanawarbucket")
+
         ### Class Object ###
        # s3_bucket.create('shanawarbucket')
         s('shanawarbucket','urls.json').store_urls('shanawarbucket')
@@ -64,7 +63,7 @@ class Sprint3Stack(cdk.Stack):
         myapi=apigateway.LambdaRestApi(self,"SHANAWAR_ALI_API",handler=apilambda)
         apilambda.add_environment(key = 'table_name', value = urls_table.table_name)
         
-        ################################# creating API gateway ###################
+        ######################### creating API gateway ###################
         apilambda.grant_invoke( aws_iam.ServicePrincipal("apigateway.amazonaws.com"))
         urls_table.grant_read_write_data(apilambda) 
                 
@@ -85,9 +84,6 @@ class Sprint3Stack(cdk.Stack):
         # DYNAMODB SUBSCRIPTION
         newtopic.add_subscription(subscriptions_.LambdaSubscription(DBLambda))
         
-         
-        #URLS = read.ReadFromTable(urls_table.table_name)
-        client = boto3.client('dynamodb')
         for url in URLS:
              ############################## Availability metrics and alarm for availability ###############################
             #client.put_item(TableName = ,Item={'Links':{'S': url}})
@@ -124,44 +120,12 @@ class Sprint3Stack(cdk.Stack):
             availability_alarm.add_alarm_action(actions_.SnsAction(newtopic))
             latency_alarm.add_alarm_action(actions_.SnsAction(newtopic))
 
-        """ 
-     # AVAILABILITY ALARM    
-        dimenesion= {'URL':constants.URL_to_Monitor} 
-        availability_metric = cloudwatch_.Metric(
-        namespace=constants.URL_Monitor_Namespace,
-        metric_name=constants.URL_Monitor_Name_Availability,
-        dimensions_map=dimenesion,
-        period= cdk.Duration.minutes(1))
-        
-        availability_alarm= cloudwatch_.Alarm(self,
-        id="AvailabilityAlarm",
-        metric= availability_metric,
-        comparison_operator=cloudwatch_.ComparisonOperator.LESS_THAN_THRESHOLD,
-        datapoints_to_alarm=1,
-        evaluation_periods=1,
-        threshold=1)
-        
-     # LATENCY ALARM     
-        dimenesion= {'URL':constants.URL_to_Monitor}
-        Latency_metric = cloudwatch_.Metric(
-        namespace=constants.URL_Monitor_Namespace,
-        metric_name=constants.URL_Monitor_Name_Latency,
-        dimensions_map=dimenesion,
-        period= cdk.Duration.minutes(1))
-        
-        latency_alarm= cloudwatch_.Alarm(self,
-        id="LatencyAlarm",
-        metric= Latency_metric,
-        comparison_operator=cloudwatch_.ComparisonOperator.GREATER_THAN_THRESHOLD,
-        datapoints_to_alarm=1,
-        evaluation_periods=1,
-        threshold=0.25)
-        """
-     
+
+
 #############################################################
         ############ SPRINT 2 CODE ADDITION #######
         # DEFININING ROLLBACK METRIC
-        """
+
         rollback_metric=cloudwatch_.Metric(
         namespace='AWS/Lambda',
         metric_name='Duration',
@@ -175,11 +139,11 @@ class Sprint3Stack(cdk.Stack):
         comparison_operator=cloudwatch_.ComparisonOperator.GREATER_THAN_THRESHOLD,
         datapoints_to_alarm=1,
         evaluation_periods=1,
-        threshold=800) # THRESHOLD IS IN MILLISECONDS
+        threshold=2500) # THRESHOLD IS IN MILLISECONDS
         
         rollback_alarm.add_alarm_action(actions_.SnsAction(newtopic))
         alias = lambda_.Alias(self, "Shanawar_WebHealthLambdaAlias"+construct_id,alias_name= 'Shanawar'+construct_id,version=WebHealthLambda.current_version)#)
-        """
+
         """
         Parameters
         scope (Construct) –
@@ -197,13 +161,13 @@ class Sprint3Stack(cdk.Stack):
         """
         # Linear: Traffic is shifted in equal increments with an equal number of minutes between each increment. 
         # linear options specify the percentage of traffic that's shifted in each increment and the number of minutes between each increment.
-        """
+
         codedeploy.LambdaDeploymentGroup(self, "Shanawar_WebHealthLambda_DeploymentGroup",
         alias=alias,
         deployment_config=codedeploy.LambdaDeploymentConfig.LINEAR_10_PERCENT_EVERY_1_MINUTE,   
         alarms=[rollback_alarm]
         )
-        """
+
 ############################################################
  ############ LAMBDA ROLE ##############################       
     
