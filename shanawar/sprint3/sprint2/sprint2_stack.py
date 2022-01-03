@@ -68,7 +68,7 @@ class Sprint2Stack(cdk.Stack):
         WebHealthLambda.add_environment(key = 'table_name', value = urls_table.table_name)
         
         #########################   API #################################
-        myapi=apigateway.LambdaRestApi(self,"shanawarapi",handler=apilambda)
+        myapi=apigateway.LambdaRestApi(self,"SHANAWAR_ALI_API",handler=apilambda)
         apilambda.add_environment(key = 'table_name', value = urls_table.table_name)
         
         ################################# creating API gateway ###################
