@@ -20,8 +20,6 @@ def lambda_handler(events, context):
             'Links':{'S': link}
         })
     
-    
-    
     method = events['httpMethod']
     
     if method == 'GET':
@@ -48,8 +46,8 @@ def lambda_handler(events, context):
         response = f"Url= {events['body']} is successfully deleted from the table"
         
     else:
-        
         response = 'Indefinite Method Request Error.'
+        
     print(response) 
     
     return {

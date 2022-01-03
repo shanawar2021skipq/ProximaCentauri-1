@@ -3,8 +3,8 @@ import os
 
 from aws_cdk import core
 
-from sprint2.sprint2_stack import Sprint2Stack
-from sprint2.shanawar_pipeline_stack import PipelineStack
+from sprint3.sprint3_stack import Sprint3Stack
+from sprint3.shanawar_pipeline_stack import PipelineStack
 
 app = core.App()
 #Sprint2Stack(app, "Sprint2Stack",

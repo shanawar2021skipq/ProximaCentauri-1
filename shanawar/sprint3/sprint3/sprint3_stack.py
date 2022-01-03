@@ -19,7 +19,7 @@ from resources.bucket import Bucket as s
 import resources.read as read
 import os,boto3
 
-class Sprint2Stack(cdk.Stack):
+class Sprint3Stack(cdk.Stack):
 
     def __init__(self, scope: cdk.Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
@@ -53,35 +53,30 @@ class Sprint2Stack(cdk.Stack):
         
         urls_table=dynamodb_.Table(self,id='ShanawarUrls',
         partition_key=dynamodb_.Attribute(name="Links", type=dynamodb_.AttributeType.STRING))
-        ####  S3 to DynamoDB Writer Lambda ######
-        #s3dynamolambda = self.create_lambda('s3todynamo',"./resources",'s3_dynamo_lambda.lambda_handler',lambda_role)
         apilambda = self.create_lambda('api',"./resources",'api_lambda.lambda_handler',lambda_role)
-        
 
-        #bucket = s3.Bucket(self, "ShanawarBucketForURLs")
-        #s3dynamolambda.add_event_source(sources_.S3EventSource(bucket,events=[s3.EventType.OBJECT_CREATED]))
         ########## FULL ACCESS TO URLS AND CREATING ENVIRONMENT VARIABLE FOR S3DYNAMO AND WebHealth LAMBDA #########
         
-        #urls_table.grant_read_write_data(s3dynamolambda)
         urls_table.grant_read_write_data(WebHealthLambda)
-        #s3dynamolambda.add_environment(key = 'table_name', value =urls_table.table_name )
         WebHealthLambda.add_environment(key = 'table_name', value = urls_table.table_name)
         
         #########################   API #################################
-        myapi=apigateway.LambdaRestApi(self,"SHANAWAR_ALI_API"+ construct_id,handler=apilambda)
+        myapi=apigateway.LambdaRestApi(self,"SHANAWAR_ALI_API",handler=apilambda)
         apilambda.add_environment(key = 'table_name', value = urls_table.table_name)
         
         ################################# creating API gateway ###################
-        
-        
         apilambda.grant_invoke( aws_iam.ServicePrincipal("apigateway.amazonaws.com"))
         urls_table.grant_read_write_data(apilambda) 
                 
         items = myapi.root.add_resource("items")
-        items.add_method("GET") # GET /items
-        items.add_method("PUT") #  Allowed methods: ANY,OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD POST /items
-        items.add_method("DELETE")
-
+     #    Allowed methods: ANY,OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD POST /items
+     
+       # CRUD OPERATIONS
+        items.add_method("PUT") # CREATE: ADD URL TO TABLE
+        items.add_method("GET") # READ: GET ALL URLS FROM TABLE
+        items.add_method("POST") # UPDATE: UPDATE URL IN TABLE
+        items.add_method("DELETE") # DELETE: DELETE URL FROM TABLE
+       
         ##############################################################################################
         
         newtopic =sns.Topic(self,"SNS Topic For Web Health by Shanawar")

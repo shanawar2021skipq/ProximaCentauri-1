@@ -11,11 +11,11 @@ from aws_cdk import (
     aws_cloudwatch_actions as actions_,
     aws_dynamodb as dynamodb_,    # aws_sqs as sqs,
 )
-from sprint2.sprint2_stack import Sprint2Stack
+from sprint3.sprint3_stack import Sprint3Stack
 
-class Sprint2Stage(cdk.Stage):
+class Sprint3Stage(cdk.Stage):
 
     def __init__(self, scope: cdk.Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
-        sprint2_stack=Sprint2Stack(self,'sprint2Stack')
+        sprint3_stack=Sprint3Stack(self,'sprint3Stack')
      
