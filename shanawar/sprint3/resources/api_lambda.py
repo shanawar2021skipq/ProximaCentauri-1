@@ -43,6 +43,7 @@ def lambda_handler(events, context):
         response = f"Url= {events['body']} is successfully deleted from the table"
         
     elif method == 'POST':
+        url = events['body']
         url_ex_new=url.split(",")
         ex=url_ex_new[0]
         new=url_ex_new[1]
