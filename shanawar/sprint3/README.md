@@ -1,16 +1,16 @@
 
-<h1 align="center">  Sprint 2: Multi-Stage Pipeline for Webcrawler 
+<h1 align="center">  Sprint 3: Build CRUD API Gateway endpoint for the Web Crawler 
   
 ## Description
-A multistage pipeline having Beta/gamma and Prod stage with unit/integration tests for webcrawler and automated rollback to the last build.
+Build a public CRUD API Gateway endpoint for the web crawler to create/read/update/delete the target list containing the list of websites/webpages to crawl along with extended tests in each stage to cover the CRUD operations and DynamoDB read/write time.
   
 ## Concepts
-  * Introduction to CI/CD
-  * AWS Services: Codepipeline for build and test, CodeDeploy for CD
-  * Integrate AWS Codepipeline with GitHub
-  * Pytest automated testing
-  * Operational metric and alarm for webcrawler
-  * Automated Rollback to last build
+*	Learn AWS Services: API Gateway, DynamoDB  
+*	Write a RESTful API Gateway interface for web crawler CRUD operations 
+*	Write a Python Function to implement business logic of CRUD into DynamoDB
+*	Extend tests and prod/beta Cl/CD pipelines in CodeDeploy / CodePipeline 
+*	Use Cl/CD to automate multiple deployment stages (prod vs beta)
+
   
 ## Installing and Running Project
 
@@ -22,17 +22,16 @@ https://user-images.githubusercontent.com/96059754/147419249-7c3fc66a-c0f9-4050-
 * `git clone https://github.com/shanawar2021skipq/ProximaCentauri.git`
 * `cd ProximaCentauri`
 * `cd shanawar`
-* `cd sprint2`
+* `cd sprint3`
 * `source .venv/bin/activate`
+* `pip install -r requirements.txt`
 * `cdk bootstrap --qualifier <qualifier> --toolkit-stack-name <nametoolkit> --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess <account>/<region>`
 * `cdk deploy <pipelinename>`
 * `pytest <testfolder>`
   
 ## Outputs
   
-
-https://user-images.githubusercontent.com/96059754/147419263-6524265a-75a0-4301-8a79-849d0a97dd35.mp4
-
+https://user-images.githubusercontent.com/96059754/148003247-1574f012-a32a-4eda-9d8c-30591a34bc33.mp4
 
 
 ## Useful commands
@@ -43,4 +42,5 @@ https://user-images.githubusercontent.com/96059754/147419263-6524265a-75a0-4301-
  * `cdk diff`        compare deployed stack with current state
  * `cdk docs`        open CDK documentation
 ## 
-Enjoy!
+## Support
+  Email: shanawar.ali.chouhdry.s@skipq.org 
