@@ -1,12 +1,13 @@
 import pytest ,urllib3,requests,datetime
 
-api='https://am12vc9adf.execute-api.us-east-2.amazonaws.com/prod'
-api1='https://z6mdf65yd7.execute-api.us-east-2.amazonaws.com/prod'
+#invokeurl=f"https://{a.restApiId}.execute-api.us-east-2.amazonaws.com/prod/"
+
+api='https://xx7b4z0m61.execute-api.us-east-2.amazonaws.com/prod'
 
 
-def test():
+def test_put():
     http=urllib3.PoolManager()
-    response=http.request("GET",api)
+    response=http.request("GET",invokeurl)
     assert response.status == 200
     
 
@@ -18,4 +19,3 @@ def test_latency():
     diff=end-start
     latency_sec=round(diff.microseconds * 0.000001,6)
     assert latency_sec<1
-

@@ -47,7 +47,14 @@ class Sprint3Stack(cdk.Stack):
         dbtable.grant_read_write_data(DBLambda)
         DBLambda.add_environment('table_name',dbtable.table_name)
         
+        newtopic =sns.Topic(self,"SNS Topic For Web Health by Shanawar")
+        # EMAIL SUBSCRIPTION
+        newtopic.add_subscription(subscriptions_.EmailSubscription('shanawar.ali.chouhdry.s@skipq.org'))
+        # DYNAMODB SUBSCRIPTION
+        newtopic.add_subscription(subscriptions_.LambdaSubscription(DBLambda))
         
+        
+        ##################################     SPRINT 3   ###########################################
         ################################## TABLE FOR URLS ###########################################
         
         urls_table=dynamodb_.Table(self,id='ShanawarUrls',
@@ -78,12 +85,7 @@ class Sprint3Stack(cdk.Stack):
        
         ##############################################################################################
         
-        newtopic =sns.Topic(self,"SNS Topic For Web Health by Shanawar")
-        # EMAIL SUBSCRIPTION
-        newtopic.add_subscription(subscriptions_.EmailSubscription('shanawar.ali.chouhdry.s@skipq.org'))
-        # DYNAMODB SUBSCRIPTION
-        newtopic.add_subscription(subscriptions_.LambdaSubscription(DBLambda))
-        
+      
         for url in URLS:
              ############################## Availability metrics and alarm for availability ###############################
             #client.put_item(TableName = ,Item={'Links':{'S': url}})

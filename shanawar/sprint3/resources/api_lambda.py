@@ -3,22 +3,20 @@ import read
 from bucket import Bucket as s
 client = boto3.client('dynamodb')
 
+URLS= s('shanawarbucket','urls.json').get_bucket()
+print('URLS in API LAMBDA ',URLS)
+
+urltable = os.getenv(key = 'table_name')#getting table name
+print('THE URL TABLE NAME in API LAMBDA:',urltable)
+
+for link in URLS:
+    client.put_item(TableName = urltable,Item={'Links':{'S': link}})
+
 
 def lambda_handler(events, context):
     client = boto3.client('dynamodb')
     
-    
-    URLS= s('shanawarbucket','urls.json').get_bucket()
-    print('URLS in API LAMBDA ',URLS)
-    
-    urltable = os.getenv(key = 'table_name')#getting table name
-    print('THE URL TABLE NAME in API LAMBDA:',urltable)
-    
-    for link in URLS:
-        client.put_item(TableName = urltable,Item={'Links':{'S': link}})
-    
     method = events['httpMethod']
-    
     if method == 'GET':
         data = read.ReadFromTable(urltable)
         response = f"URLS = {data} "
