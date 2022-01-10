@@ -54,6 +54,42 @@ class Sprint4Stack(cdk.Stack):
         newtopic.add_subscription(subscriptions_.EmailSubscription('shanawar.ali.chouhdry.s@skipq.org'))
         # DYNAMODB SUBSCRIPTION
         newtopic.add_subscription(subscriptions_.LambdaSubscription(DBLambda))
+                
+        ##################################     SPRINT 4   ###########################################
+        ##################################     Cognito    ###########################################
+
+        
+        user_pool = aws_cognito.UserPool(self, 'shanawar_UserPool',
+          removal_policy=cdk.RemovalPolicy.DESTROY,
+          self_sign_up_enabled=True,
+          sign_in_aliases={'email': True},
+          auto_verify={'email': True},
+          password_policy={
+            'min_length': 8,
+            'require_lowercase': False,
+            'require_digits': False,
+            'require_uppercase': False,
+            'require_symbols': False,
+          },
+          account_recovery=aws_cognito.AccountRecovery.EMAIL_ONLY
+        )
+    
+        user_pool_client = aws_cognito.UserPoolClient(self, 'UserPoolClient',
+          user_pool=user_pool,
+          auth_flows={
+            'admin_user_password': True,
+            'user_password': True,
+            'custom': True,
+            'user_srp': True
+          },
+          supported_identity_providers=[aws_cognito.UserPoolClientIdentityProvider.COGNITO]
+        )
+    
+        auth = apigateway.CognitoUserPoolsAuthorizer(self, 'AuthorizerForApi',
+          cognito_user_pools=[user_pool]
+        )
+        
+        
         
         
         ##################################     SPRINT 3   ###########################################
@@ -69,7 +105,9 @@ class Sprint4Stack(cdk.Stack):
         WebHealthLambda.add_environment(key = 'table_name', value = urls_table.table_name)
         
         #########################   API #################################
-        myapi=apigateway.LambdaRestApi(self,"SHANAWAR_ALI_API",handler=apilambda)
+        myapi=apigateway.LambdaRestApi(self,"SHANAWAR_ALI_API",handler=apilambda,default_cors_preflight_options={
+        "allow_origins": apigateway.Cors.ALL_ORIGINS})
+        
         apilambda.add_environment(key = 'table_name', value = urls_table.table_name)
         
         ######################### creating API gateway ###################
@@ -81,9 +119,14 @@ class Sprint4Stack(cdk.Stack):
      
        # CRUD OPERATIONS
         items.add_method("PUT") # CREATE: ADD URL TO TABLE
-        items.add_method("GET") # READ: GET ALL URLS FROM TABLE
+        items.add_method("GET",authorization_type=apigateway.AuthorizationType.COGNITO,authorizer=auth) # READ: GET ALL URLS FROM TABLE
         items.add_method("POST") # UPDATE: UPDATE URL IN TABLE
         items.add_method("DELETE") # DELETE: DELETE URL FROM TABLE
+        
+        
+        cdk.CfnOutput(self, 'UserPoolId', value=user_pool.user_pool_id)
+        cdk.CfnOutput(self, 'UserPoolClientId', value=user_pool_client.user_pool_client_id)
+
        
         ##############################################################################################
         
