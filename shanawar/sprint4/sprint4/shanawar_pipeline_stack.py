@@ -21,8 +21,8 @@ class PipelineStack(core.Stack):
         
         ############# STEP2: BUILD ###############
         synth = pipelines.CodeBuildStep('Shanawar_synthesizing',input=source,
-        commands=["cd shanawar/sprint3","pip install -r requirements.txt", "npm install -g aws-cdk", "cdk synth"],
-        primary_output_directory="shanawar/sprint3/cdk.out",
+        commands=["cd shanawar/sprint4","pip install -r requirements.txt", "npm install -g aws-cdk", "cdk synth"],
+        primary_output_directory="shanawar/sprint4/cdk.out",
         role=pipelineroles,
         role_policy_statements=[iamPolicy,stsPolicy]
         )
@@ -30,10 +30,10 @@ class PipelineStack(core.Stack):
         pipeline=pipelines.CodePipeline(self,"ShanawarPipeline",pipeline_name="ShanawarAliPipeline",synth=synth)
 
         ############# STEP3: TEST ###############      
-        beta= Sprint3Stage(self,"ShanawarBeta3",
+        beta= Sprint4Stage(self,"ShanawarBeta4",
         env={"account":"315997497220","region":"us-east-2"})
         
-        prod= Sprint3Stage(self,"ShanawarProd3",
+        prod= Sprint4Stage(self,"ShanawarProd4",
         env={"account":"315997497220","region":"us-east-2"})
         
 
@@ -41,14 +41,14 @@ class PipelineStack(core.Stack):
 
         unit_test = pipelines.CodeBuildStep(
             'unit_tests',input=source,
-            commands=["cd shanawar/sprint3","pip install -r requirements.txt", "npm install -g aws-cdk", "pytest unit_tests"],
+            commands=["cd shanawar/sprint4","pip install -r requirements.txt", "npm install -g aws-cdk", "pytest unit_tests"],
             role=pipelineroles,
             role_policy_statements=[iamPolicy,stsPolicy]
             )
         """
         integration_test = pipelines.CodeBuildStep(
             'integration_tests',input=source,
-            commands=["cd shanawar/sprint3","pip install -r requirements.txt", "npm install -g aws-cdk", "pytest integration_tests"],
+            commands=["cd shanawar/sprint4","pip install -r requirements.txt", "npm install -g aws-cdk", "pytest integration_tests"],
             role=pipelineroles,
             role_policy_statements=[iamPolicy,stsPolicy]
             )
