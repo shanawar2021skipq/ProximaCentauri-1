@@ -4,7 +4,7 @@ from aws_cdk import (
     aws_iam ,
     pipelines
     )
-from sprint3.sprint3_stage import Sprint3Stage
+from sprint4.sprint4_stage import Sprint4Stage
 
 class PipelineStack(core.Stack):
     def __init__(self,scope:core.Construct,id:str,**kwargs):
