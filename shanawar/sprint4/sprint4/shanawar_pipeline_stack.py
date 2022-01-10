@@ -30,10 +30,10 @@ class PipelineStack(core.Stack):
         pipeline=pipelines.CodePipeline(self,"ShanawarPipeline",pipeline_name="ShanawarAliPipeline",synth=synth)
 
         ############# STEP3: TEST ###############      
-        beta= Sprint4Stage(self,"ShanawarBeta4",
+        beta= Sprint4Stage(self,"ShanawarBeta",
         env={"account":"315997497220","region":"us-east-2"})
         
-        prod= Sprint4Stage(self,"ShanawarProd4",
+        prod= Sprint4Stage(self,"ShanawarProd",
         env={"account":"315997497220","region":"us-east-2"})
         
 
