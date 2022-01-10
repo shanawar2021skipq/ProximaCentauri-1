@@ -91,7 +91,6 @@ class Sprint4Stack(cdk.Stack):
         
         
         
-        
         ##################################     SPRINT 3   ###########################################
         ################################## TABLE FOR URLS ###########################################
         
@@ -114,14 +113,14 @@ class Sprint4Stack(cdk.Stack):
         apilambda.grant_invoke( aws_iam.ServicePrincipal("apigateway.amazonaws.com"))
         urls_table.grant_read_write_data(apilambda) 
                 
-        items = myapi.root.add_resource("items")
+        items = myapi.root.add_resource("items",authorization_type=apigateway.AuthorizationType.COGNITO,authorizer=auth)
      #    Allowed methods: ANY,OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD POST /items
      
        # CRUD OPERATIONS
-        items.add_method("PUT") # CREATE: ADD URL TO TABLE
+        items.add_method("PUT",authorization_type=apigateway.AuthorizationType.COGNITO,authorizer=auth) # CREATE: ADD URL TO TABLE
         items.add_method("GET",authorization_type=apigateway.AuthorizationType.COGNITO,authorizer=auth) # READ: GET ALL URLS FROM TABLE
-        items.add_method("POST") # UPDATE: UPDATE URL IN TABLE
-        items.add_method("DELETE") # DELETE: DELETE URL FROM TABLE
+        items.add_method("POST",authorization_type=apigateway.AuthorizationType.COGNITO,authorizer=auth) # UPDATE: UPDATE URL IN TABLE
+        items.add_method("DELETE",authorization_type=apigateway.AuthorizationType.COGNITO,authorizer=auth) # DELETE: DELETE URL FROM TABLE
         
         
         cdk.CfnOutput(self, 'UserPoolId', value=user_pool.user_pool_id)
