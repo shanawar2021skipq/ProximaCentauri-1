@@ -82,12 +82,16 @@ class Sprint4Stack(cdk.Stack):
             'custom': True,
             'user_srp': True
           },
+          o_auth=aws_cognito.OAuthSettings(
+            flows=aws_cognito.OAuthFlows(
+                implicit_code_grant=True
+            ),
+            callback_urls=["http://localhost:3000/"]
+          ),
           supported_identity_providers=[aws_cognito.UserPoolClientIdentityProvider.COGNITO]
         )
     
-        auth = apigateway.CognitoUserPoolsAuthorizer(self, 'AuthorizerForApi',
-          cognito_user_pools=[user_pool]
-        )
+        auth = apigateway.CognitoUserPoolsAuthorizer(self, 'AuthorizerForApi',cognito_user_pools=[user_pool])
         
         
         
