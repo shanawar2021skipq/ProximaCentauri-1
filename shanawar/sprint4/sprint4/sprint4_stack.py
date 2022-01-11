@@ -117,7 +117,7 @@ class Sprint4Stack(cdk.Stack):
         apilambda.grant_invoke( aws_iam.ServicePrincipal("apigateway.amazonaws.com"))
         urls_table.grant_read_write_data(apilambda) 
                 
-        items = myapi.root.add_resource("items",authorization_type=apigateway.AuthorizationType.COGNITO,authorizer=auth)
+        items = myapi.root.add_resource("items")
      #    Allowed methods: ANY,OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD POST /items
      
        # CRUD OPERATIONS
