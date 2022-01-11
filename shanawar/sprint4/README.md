@@ -1,28 +1,31 @@
 
-<h1 align="center">  Sprint 3: Build CRUD API Gateway endpoint for the Web Crawler 
+<h1 align="center">  Sprint 4: Build a Front-End user-interface for the CRUD API Gateway using ReactJS
   
 ## Description
-Build a public CRUD API Gateway endpoint for the web crawler to create/read/update/delete the target list containing the list of websites/webpages to crawl along with extended tests in each stage to cover the CRUD operations and DynamoDB read/write time.
+Build a Front-End user-interface for the CRUD API Gateway using ReactJS. The user interface should allow users to see and search the database (DynamoDB) and should load URLs with pagination. Login should be enabled through React with authentication using AWS Cognito or equivalent OAuth method. The React app can be rendered with an AWS Lambda Function. Use the library of foundational and advanced components and design system in Chakra UI to develop your React application
   
 ## Concepts
-*	Learn AWS Services: API Gateway, DynamoDB  
-*	Write a RESTful API Gateway interface for web crawler CRUD operations 
-*	Write a Python Function to implement business logic of CRUD into DynamoDB
-*	Extend tests and prod/beta Cl/CD pipelines in CodeDeploy / CodePipeline 
-*	Use Cl/CD to automate multiple deployment stages (prod vs beta)
+*	Learn how to create a Front-End app with ReactJS 
+* Learn how to enable authentication using OAuth method 
+* Write accessible React apps using readily available UI libraries. 
+  
+## Technologies
+* AWS API Gateway
+*  AWS Amplify
+*  AWS Cognito
+*  Dynamodb
+* S3 buckets
+* AWS Lambda
+*  AWS Cloudwatch
+*  AWS SNS
 
   
 ## Installing and Running Project
 
-
-https://user-images.githubusercontent.com/96059754/147419249-7c3fc66a-c0f9-4050-a34c-8a34921d245c.mp4
-
-
-## Commands
 * `git clone https://github.com/shanawar2021skipq/ProximaCentauri.git`
 * `cd ProximaCentauri`
 * `cd shanawar`
-* `cd sprint3`
+* `cd sprint4`
 * `source .venv/bin/activate`
 * `pip install -r requirements.txt`
 * `cdk bootstrap --qualifier <qualifier> --toolkit-stack-name <nametoolkit> --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess <account>/<region>`
@@ -30,17 +33,10 @@ https://user-images.githubusercontent.com/96059754/147419249-7c3fc66a-c0f9-4050-
 * `pytest <testfolder>`
   
 ## Outputs
-  
-https://user-images.githubusercontent.com/96059754/148003247-1574f012-a32a-4eda-9d8c-30591a34bc33.mp4
+ ### Cognito Login
+![image](https://user-images.githubusercontent.com/96059754/148870758-b8e91154-ccbf-4870-a035-0b6525f0a9d7.png)
+### UI
+![image](https://user-images.githubusercontent.com/96059754/148871975-0882d13b-7791-48fa-be85-83db85d14b1b.png)
 
-
-## Useful commands
- 
- * `cdk ls`          list all stacks in the app
- * `cdk synth`       emits the synthesized CloudFormation template
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk docs`        open CDK documentation
-## 
 ## Support
   Email: shanawar.ali.chouhdry.s@skipq.org 
