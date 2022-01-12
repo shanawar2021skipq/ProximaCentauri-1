@@ -57,8 +57,8 @@ class Sprint4Stack(cdk.Stack):
                 
         ##################################     SPRINT 4   ###########################################
         ##################################     Cognito    ###########################################
-
         
+        # Creating User pools allow creating and managing your own directory of users that can sign up and sign in
         user_pool = aws_cognito.UserPool(self, 'shanawar_UserPool',
           removal_policy=cdk.RemovalPolicy.DESTROY,
           self_sign_up_enabled=True,
@@ -73,24 +73,27 @@ class Sprint4Stack(cdk.Stack):
           },
           account_recovery=aws_cognito.AccountRecovery.EMAIL_ONLY
         )
-    
+        
+        ## App Client for userpools
         user_pool_client = aws_cognito.UserPoolClient(self, 'UserPoolClient',
           user_pool=user_pool,
           auth_flows={
             'admin_user_password': True,
             'user_password': True,
             'custom': True,
-            'user_srp': True
-          },
-          o_auth=aws_cognito.OAuthSettings(
+            'user_srp': True},
+        #Authentication flows allow users on a client to be authenticated with a user pool. Cognito user pools provide several different types of authentication
+            o_auth=aws_cognito.OAuthSettings(
+    ##The following code configures an app client with the authorization code grant flow and registers the the app’s UI page as a callback (or redirect) URL. 
             flows=aws_cognito.OAuthFlows(
                 implicit_code_grant=True
             ),
-            callback_urls=["http://localhost:3000/"]
+            callback_urls=["https://671c0ee4b1de43fa9976038a687a2d5a.vfs.cloud9.us-east-2.amazonaws.com/"]    # Callback URL will redirect after sign up to UI 
           ),
           supported_identity_providers=[aws_cognito.UserPoolClientIdentityProvider.COGNITO]
         )
-    
+        
+        ## AUTHORIZER FOR API
         auth = apigateway.CognitoUserPoolsAuthorizer(self, 'AuthorizerForApi',cognito_user_pools=[user_pool])
         
         
