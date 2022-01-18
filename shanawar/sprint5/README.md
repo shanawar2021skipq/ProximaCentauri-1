@@ -1,5 +1,5 @@
 
-<h1 align="center">  Sprint 4: Build a Front-End user-interface for the CRUD API Gateway using ReactJS
+<h1 align="center">  Sprint 5: Create a dockerized container for API test clients using pyresttest and Syntribos.
   
 ## Description
 Build a Front-End user-interface for the CRUD API Gateway using ReactJS. The user interface should allow users to see and search the database (DynamoDB) and should load URLs with pagination. Login should be enabled through React with authentication using AWS Cognito or equivalent OAuth method. The React app can be rendered with an AWS Lambda Function. Use the library of foundational and advanced components and design system in Chakra UI to develop your React application
@@ -25,12 +25,12 @@ Build a Front-End user-interface for the CRUD API Gateway using ReactJS. The use
 * `git clone https://github.com/shanawar2021skipq/ProximaCentauri.git`
 * `cd ProximaCentauri`
 * `cd shanawar`
-* `cd sprint4`
+* `cd sprint5`
 * `source .venv/bin/activate`
 * `pip install -r requirements.txt`
 * `cdk bootstrap --qualifier <qualifier> --toolkit-stack-name <nametoolkit> --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess <account>/<region>`
 * `cdk deploy <pipelinename>`
-* `pytest <testfolder>`
+* `pyresttest <testfolder>`
   
 ## Outputs
  ### Cognito Login
