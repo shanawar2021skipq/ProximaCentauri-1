@@ -111,8 +111,11 @@ class Sprint5Stack(cdk.Stack):
         WebHealthLambda.add_environment(key = 'table_name', value = urls_table.table_name)
         
         #########################   API #################################
-        myapi=apigateway.LambdaRestApi(self,"SHANAWAR_ALI_API",handler=apilambda,default_cors_preflight_options={
-        "allow_origins": apigateway.Cors.ALL_ORIGINS})
+        myapi=apigateway.LambdaRestApi(self,"SHANAWAR_ALI_API",handler=apilambda,
+        default_cors_preflight_options=
+        {
+        "allow_origins": apigateway.Cors.ALL_ORIGINS}
+        )
         
         apilambda.add_environment(key = 'table_name', value = urls_table.table_name)
         

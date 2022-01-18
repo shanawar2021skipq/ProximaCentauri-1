@@ -22,7 +22,7 @@ class PipelineStack(core.Stack):
         ############# STEP2: BUILD ###############
         synth = pipelines.CodeBuildStep('Shanawar_synthesizing',input=source,
         commands=["cd shanawar/sprint5","pip install -r requirements.txt", "npm install -g aws-cdk", "cdk synth"],
-        primary_output_directory="shanawar/sprint4/cdk.out",
+        primary_output_directory="shanawar/sprint5/cdk.out",
         role=pipelineroles,
         role_policy_statements=[iamPolicy,stsPolicy]
         )

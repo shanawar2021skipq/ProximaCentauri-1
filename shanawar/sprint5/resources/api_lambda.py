@@ -57,7 +57,8 @@ def lambda_handler(events, context):
         
     print(response) 
     
-    return {
+    return{
         'statusCode' : 200,
-        'body'  :  response
+        'body'  :  response,
+        'headers': 'Access-Control-Allow-Origin'
     }
