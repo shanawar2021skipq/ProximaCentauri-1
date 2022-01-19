@@ -30,7 +30,7 @@ class PipelineStack(core.Stack):
         pipeline=pipelines.CodePipeline(self,"ShanawarPipeline",pipeline_name="ShanawarAliPipeline",synth=synth)
 
         ############# STEP3: TEST ###############      
-        beta= Sprint5Stage(self,"ShanawarBeta",
+        beta= Sprint5Stage(self,"ShanawarBetas5",
         env={"account":"315997497220","region":"us-east-2"})
         
         prod= Sprint5Stage(self,"ShanawarProd",
@@ -63,7 +63,8 @@ class PipelineStack(core.Stack):
         assumed_by=aws_iam.CompositePrincipal(
             aws_iam.ServicePrincipal("lambda.amazonaws.com"),
             aws_iam.ServicePrincipal("sns.amazonaws.com"),
-            aws_iam.ServicePrincipal("codebuild.amazonaws.com")
+            aws_iam.ServicePrincipal("codebuild.amazonaws.com"),
+            aws_iam.ServicePrincipal("ec2.amazonaws.com")
             ),
         managed_policies=[
             aws_iam.ManagedPolicy.from_aws_managed_policy_name('service-role/AWSLambdaBasicExecutionRole'),
@@ -72,7 +73,9 @@ class PipelineStack(core.Stack):
             aws_iam.ManagedPolicy.from_aws_managed_policy_name("AwsCloudFormationFullAccess"),
             aws_iam.ManagedPolicy.from_aws_managed_policy_name("AmazonSSMFullAccess"),
             aws_iam.ManagedPolicy.from_aws_managed_policy_name("AWSCodePipeline_FullAccess"),
-            aws_iam.ManagedPolicy.from_aws_managed_policy_name("AmazonS3FullAccess")
+            aws_iam.ManagedPolicy.from_aws_managed_policy_name("AmazonS3FullAccess"),
+            aws_iam.ManagedPolicy.from_aws_managed_policy_name("AmazonEC2ContainerRegistryFullAccess"),
+            aws_iam.ManagedPolicy.from_aws_managed_policy_name("AmazonECS_FullAccess")
             ])
         return role 
 ############################################################################
