@@ -110,10 +110,11 @@ class Sprint5Stack(cdk.Stack):
             vpc=vpc
         )
 
-        task_definition = ecs.Ec2TaskDefinition(self, "TaskDef")
-        
         cluster.add_capacity("ShanawarClustercapacity",
             instance_type=ec2.InstanceType("t2.xlarge"))
+            
+        task_definition = ecs.Ec2TaskDefinition(self, "ShanawarTaskDef")
+
         """   
         load_balanced_fargate_service = ecs_patterns.ApplicationLoadBalancedFargateService(self, "Service",
             cluster=cluster,
@@ -121,11 +122,10 @@ class Sprint5Stack(cdk.Stack):
             cpu=512,
             image=ecs.ContainerImage.from_registry("amazon/amazon-ecs-sample")
         )
-        """
         
         task_definition.add_container("shanawarContainer",
             image=ecs.ContainerImage.from_registry("amazon/amazon-ecs-sample"),
-            memory_limit_mib=512,
+            memory_limit_mib=2048,
         )
         
         # Instantiate an Amazon ECS Service
@@ -133,11 +133,20 @@ class Sprint5Stack(cdk.Stack):
             cluster=cluster,
             task_definition=task_definition
         )
+        """
+        
+        load_balanced_fargate_service = ecs_patterns.ApplicationLoadBalancedFargateService(self, "Service",
+            cluster=cluster,
+            memory_limit_mib=2048,
+            desired_count=2,
+            cpu=512,
+            task_image_options=ecs_patterns.ApplicationLoadBalancedTaskImageOptions(
+                image=ecs.ContainerImage.from_registry("amazon/amazon-ecs-sample")
+            )
+        )
 
         
-        
-        
-        
+
         ##################################     SPRINT 3   ###########################################
         ################################## TABLE FOR URLS ###########################################
         
