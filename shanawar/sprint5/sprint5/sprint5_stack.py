@@ -16,6 +16,7 @@ from aws_cdk import (
     aws_cognito ,
     aws_amplify,
     aws_ecs as ecs,
+    aws_ecs_patterns as ecs_patterns,
     aws_ec2 as ec2
     
 ) 
@@ -108,18 +109,24 @@ class Sprint5Stack(cdk.Stack):
         cluster = ecs.Cluster(self, "Cluster",
             vpc=vpc
         )
-        
-        # Add capacity to it
-        cluster.add_capacity("DefaultAutoScalingGroupCapacity",
-            instance_type=ec2.InstanceType("t2.xlarge"),
-            desired_capacity=3
-        )
-        
+
         task_definition = ecs.Ec2TaskDefinition(self, "TaskDef")
         
+        
+        load_balanced_fargate_service = ecs_patterns.ApplicationLoadBalancedFargateService(self, "Service",
+            cluster=cluster,
+            #memory_limit_mi_b=1024,
+            cpu=512,
+            task_image_options=ecs_patterns.ApplicationLoadBalancedTaskImageOptions(
+                image=ecs.ContainerImage.from_registry("amazon/amazon-ecs-sample")
+            )
+        )
+
+        
+        """
         task_definition.add_container("DefaultContainer",
             image=ecs.ContainerImage.from_registry("amazon/amazon-ecs-sample"),
-            memory_limit_mi_b=512
+            memory_limit_mi_b=512,
         )
         
         # Instantiate an Amazon ECS Service
@@ -127,7 +134,7 @@ class Sprint5Stack(cdk.Stack):
             cluster=cluster,
             task_definition=task_definition
         )
-
+        """
         
         
         
