@@ -103,17 +103,17 @@ class Sprint5Stack(cdk.Stack):
         
         #################################################################################################
         #####################  SPRINT 5    #################
-                # Create an ECS cluster
-        vpc = ec2.Vpc(self, "Shanawar_VPC")
+    #    vpc = ec2.Vpc(self, "Shanawar_VPC")
+        # Create an ECS cluster
+        vpc = ec2.Vpc.from_lookup(self, "Shanawar_VPC",is_default=True)
 
         cluster = ecs.Cluster(self, "ShanawarCluster",
             vpc=vpc
         )
 
-        cluster.add_capacity("ShanawarClustercapacity",
-            instance_type=ec2.InstanceType("t2.xlarge"))
+      #  cluster.add_capacity("ShanawarClustercapacity",instance_type=ec2.InstanceType("t2.xlarge"))
             
-        task_definition = ecs.Ec2TaskDefinition(self, "ShanawarTaskDef")
+        #task_definition = ecs.Ec2TaskDefinition(self, "ShanawarTaskDef")
 
         """   
         load_balanced_fargate_service = ecs_patterns.ApplicationLoadBalancedFargateService(self, "Service",
