@@ -138,12 +138,13 @@ class Sprint5Stack(cdk.Stack):
         load_balanced_fargate_service = ecs_patterns.ApplicationLoadBalancedFargateService(self, "Service",
             cluster=cluster,
             memory_limit_mib=2048,
-            desired_count=2,
             cpu=512,
             task_image_options=ecs_patterns.ApplicationLoadBalancedTaskImageOptions(
-                image=ecs.ContainerImage.from_registry("amazon/amazon-ecs-sample")
+                image=ecs.ContainerImage.from_registry("amazon/amazon-ecs-sample"),
+                execution_role=lambda_role
             )
         )
+
 
         
 
@@ -278,14 +279,17 @@ class Sprint5Stack(cdk.Stack):
         lambdaRole=aws_iam.Role(self,"lambda-role",
         assumed_by=aws_iam.CompositePrincipal(
             aws_iam.ServicePrincipal("lambda.amazonaws.com"),
-            aws_iam.ServicePrincipal("sns.amazonaws.com")
+            aws_iam.ServicePrincipal("sns.amazonaws.com"),
+            aws_iam.ServicePrincipal("ec2.amazonaws.com")
             ),
         managed_policies=[
             aws_iam.ManagedPolicy.from_aws_managed_policy_name('service-role/AWSLambdaBasicExecutionRole'),
             aws_iam.ManagedPolicy.from_aws_managed_policy_name('CloudWatchFullAccess'),
             aws_iam.ManagedPolicy.from_aws_managed_policy_name("AmazonDynamoDBFullAccess"),
             aws_iam.ManagedPolicy.from_aws_managed_policy_name("AmazonSNSFullAccess"),
-            aws_iam.ManagedPolicy.from_aws_managed_policy_name("AmazonS3FullAccess")
+            aws_iam.ManagedPolicy.from_aws_managed_policy_name("AmazonS3FullAccess"),
+            aws_iam.ManagedPolicy.from_aws_managed_policy_name("AmazonEC2ContainerRegistryFullAccess"),
+            aws_iam.ManagedPolicy.from_aws_managed_policy_name("AmazonECS_FullAccess")
             ])
         return lambdaRole
 
