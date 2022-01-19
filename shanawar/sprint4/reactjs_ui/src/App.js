@@ -6,7 +6,7 @@ import { Button,Text,Textarea, Heading,Input,useToast,
 import {useState,useEffect} from 'react';
 
 // API URL
-const API='https://d92uek17m5.execute-api.us-east-2.amazonaws.com/prod' //beta stage
+const API='https://uzdwj94onk.execute-api.us-east-2.amazonaws.com/prod' //beta stage
 
 function App() {
   // Variables for ch

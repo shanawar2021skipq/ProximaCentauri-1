@@ -1,4 +1,4 @@
-import boto3,os
+import boto3,os,json
 import read 
 from bucket import Bucket as s
 client = boto3.client('dynamodb')
@@ -59,5 +59,10 @@ def lambda_handler(events, context):
     
     return{
         'statusCode' : 200,
-        'body'  :  response
+        'headers': {
+          'Access-Control-Allow-Headers': '*',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': '*'
+          },
+        'body'  : json.dumps(response)
     }

@@ -1,0 +1,26 @@
+---
+- config:
+    - testset: "API TESTING"
+    - timeout: 100  # Increase timeout from the default 10 second
+
+- test:
+    - name: "GET URL"
+    - url: /prod
+    - method: "GET"
+    - expected_status: [200]
+
+- test:
+    - name: "PUT URL"
+    - url: /prod
+    - method: "PUT"
+    - body: "www.testingapi.com"
+    - expected_status: [200]
+    - validators: 
+        - compare: {header: content-type, comparator: contains, expected:'json'}
+
+- test:
+    - name: "DELETE URL"
+    - url: /prod
+    - method: "DELETE"
+    - body: "www.testingapi.com"
+    - expected_status: [200]

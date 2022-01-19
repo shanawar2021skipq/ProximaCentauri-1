@@ -14,7 +14,10 @@ from aws_cdk import (
     aws_s3 as s3,
     aws_apigateway as apigateway,
     aws_cognito ,
-    aws_amplify
+    aws_amplify,
+    aws_ecs as ecs,
+    aws_ec2 as ec2
+    
 ) 
 from resources import constants as constants
 from resources.bucket import Bucket as s
@@ -97,6 +100,37 @@ class Sprint5Stack(cdk.Stack):
         auth = apigateway.CognitoUserPoolsAuthorizer(self, 'AuthorizerForApi',cognito_user_pools=[user_pool])
         
         
+        #################################################################################################
+        #####################  SPRINT 5    #################
+                # Create an ECS cluster
+        vpc = ec2.Vpc(self, "Shanawar_VPC")
+
+        cluster = ecs.Cluster(self, "Cluster",
+            vpc=vpc
+        )
+        
+        # Add capacity to it
+        cluster.add_capacity("DefaultAutoScalingGroupCapacity",
+            instance_type=ec2.InstanceType("t2.xlarge"),
+            desired_capacity=3
+        )
+        
+        task_definition = ecs.Ec2TaskDefinition(self, "TaskDef")
+        
+        task_definition.add_container("DefaultContainer",
+            image=ecs.ContainerImage.from_registry("amazon/amazon-ecs-sample"),
+            memory_limit_mi_b=512
+        )
+        
+        # Instantiate an Amazon ECS Service
+        ecs_service = ecs.Ec2Service(self, "Service",
+            cluster=cluster,
+            task_definition=task_definition
+        )
+
+        
+        
+        
         
         ##################################     SPRINT 3   ###########################################
         ################################## TABLE FOR URLS ###########################################
@@ -112,9 +146,7 @@ class Sprint5Stack(cdk.Stack):
         
         #########################   API #################################
         myapi=apigateway.LambdaRestApi(self,"SHANAWAR_ALI_API",handler=apilambda,
-        default_cors_preflight_options=
-        {
-        "allow_origins": apigateway.Cors.ALL_ORIGINS}
+        default_cors_preflight_options=apigateway.CorsOptions(allow_origins=apigateway.Cors.ALL_ORIGINS,allow_methods=apigateway.Cors.ALL_METHODS)
         )
         
         apilambda.add_environment(key = 'table_name', value = urls_table.table_name)
