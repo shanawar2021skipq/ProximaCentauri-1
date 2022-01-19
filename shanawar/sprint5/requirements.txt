@@ -15,6 +15,8 @@ aws-cdk.aws_lambda_event_sources==1.135.0
 aws-cdk.aws_ecs==1.135.0
 aws-cdk.aws_ecs_patterns==1.135.0
 aws-cdk.aws_ec2==1.135.0
+aws-cdk.aws_ecr==1.135.0
+aws-cdk.aws_ecr_assets==1.135.0
 requests
 pytest
 pyresttest
