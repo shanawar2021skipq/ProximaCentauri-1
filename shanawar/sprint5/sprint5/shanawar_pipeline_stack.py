@@ -53,7 +53,7 @@ class PipelineStack(core.Stack):
             role_policy_statements=[iamPolicy,stsPolicy]
             )
         """
-        pipeline.add_stage(beta, pre=[unit_test])
+        pipeline.add_stage(beta)#, pre=[unit_test])
     ################# STEP4: PROD ###################    
         pipeline.add_stage(prod,pre=[pipelines.ManualApprovalStep("Go to Production")])
         
