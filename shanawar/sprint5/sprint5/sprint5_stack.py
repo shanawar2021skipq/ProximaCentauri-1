@@ -106,35 +106,34 @@ class Sprint5Stack(cdk.Stack):
                 # Create an ECS cluster
         vpc = ec2.Vpc(self, "Shanawar_VPC")
 
-        cluster = ecs.Cluster(self, "Cluster",
+        cluster = ecs.Cluster(self, "ShanawarCluster",
             vpc=vpc
         )
 
         task_definition = ecs.Ec2TaskDefinition(self, "TaskDef")
         
-        
+        cluster.add_capacity("ShanawarClustercapacity",
+            instance_type=ec2.InstanceType("t2.xlarge"))
+        """   
         load_balanced_fargate_service = ecs_patterns.ApplicationLoadBalancedFargateService(self, "Service",
             cluster=cluster,
-            #memory_limit_mi_b=1024,
+            memory_limit_mib=1024,
             cpu=512,
-            task_image_options=ecs_patterns.ApplicationLoadBalancedTaskImageOptions(
-                image=ecs.ContainerImage.from_registry("amazon/amazon-ecs-sample")
-            )
+            image=ecs.ContainerImage.from_registry("amazon/amazon-ecs-sample")
         )
-
-        
         """
-        task_definition.add_container("DefaultContainer",
+        
+        task_definition.add_container("shanawarContainer",
             image=ecs.ContainerImage.from_registry("amazon/amazon-ecs-sample"),
-            memory_limit_mi_b=512,
+            memory_limit_mib=512,
         )
         
         # Instantiate an Amazon ECS Service
-        ecs_service = ecs.Ec2Service(self, "Service",
+        ecs_service = ecs.Ec2Service(self, "shanawarService",
             cluster=cluster,
             task_definition=task_definition
         )
-        """
+
         
         
         
