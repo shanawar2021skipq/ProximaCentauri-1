@@ -1,5 +1,5 @@
 
-<h1 align="center">  Sprint 5: Create a dockerized container for API test clients using pyresttest.
+<h1 align="center">  Sprint 5: Create a dockerized container for API test clients.
   
 ## Description
 Use docker-compose to build API test clients using pyresttest. These tests will exercise the web crawler's CRUD endpoint built in the previous sprint. Publish built images to Elastic Container Registry (ECR). Deploy API test clients from Sprint 4 on an EC2 instance/ AWS Fargate. Build and push API test dockers through CodePipeline. Push API test results into CloudWatch. Setup alarming and notification on API test metrics.
