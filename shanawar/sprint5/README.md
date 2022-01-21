@@ -1,25 +1,33 @@
 
-<h1 align="center">  Sprint 5: Create a dockerized container for API test clients using pyresttest and Syntribos.
+<h1 align="center">  Sprint 5: Create a dockerized container for API test clients using pyresttest.
   
 ## Description
-Build a Front-End user-interface for the CRUD API Gateway using ReactJS. The user interface should allow users to see and search the database (DynamoDB) and should load URLs with pagination. Login should be enabled through React with authentication using AWS Cognito or equivalent OAuth method. The React app can be rendered with an AWS Lambda Function. Use the library of foundational and advanced components and design system in Chakra UI to develop your React application
-  
+Use docker-compose to build API test clients using pyresttest. These tests will exercise the web crawler's CRUD endpoint built in the previous sprint. Publish built images to Elastic Container Registry (ECR). Deploy API test clients from Sprint 4 on an EC2 instance/ AWS Fargate. Build and push API test dockers through CodePipeline. Push API test results into CloudWatch. Setup alarming and notification on API test metrics.
 ## Concepts
 *	Learn how to create a Front-End app with ReactJS 
 * Learn how to enable authentication using OAuth method 
 * Write accessible React apps using readily available UI libraries. 
   
 ## Technologies
-* AWS API Gateway
-*  AWS Amplify
-*  AWS Cognito
+* AWS ECS
+*  AWS ECR
+* AWS EC2
+*  Docker
+* pyresttest
 *  Dynamodb
 * S3 buckets
 * AWS Lambda
 *  AWS Cloudwatch
 *  AWS SNS
-
-  
+ ## Docker Commands
+ *  `docker build -t <docker image name> .`
+ * `docker run <image name> <apiurl> <test.yaml>`
+### Push Image to ECR
+Create a repo in ECR.
+Retrieve an authentication token and authenticate your Docker client to your registry.
+Use the AWS CLI:
+ * `aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin <reponame> `
+ * `docker push <imagename>`
 ## Installing and Running Project
 
 * `git clone https://github.com/shanawar2021skipq/ProximaCentauri.git`
@@ -30,13 +38,7 @@ Build a Front-End user-interface for the CRUD API Gateway using ReactJS. The use
 * `pip install -r requirements.txt`
 * `cdk bootstrap --qualifier <qualifier> --toolkit-stack-name <nametoolkit> --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess <account>/<region>`
 * `cdk deploy <pipelinename>`
-* `pyresttest <testfolder>`
-  
-## Outputs
- ### Cognito Login
-![image](https://user-images.githubusercontent.com/96059754/148870758-b8e91154-ccbf-4870-a035-0b6525f0a9d7.png)
-### UI
-![image](https://user-images.githubusercontent.com/96059754/148871975-0882d13b-7791-48fa-be85-83db85d14b1b.png)
+* `pyresttest <apiurl> <test.yaml> --log debug`
 
 ## Support
   Email: shanawar.ali.chouhdry.s@skipq.org 
