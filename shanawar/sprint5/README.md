@@ -4,9 +4,12 @@
 ## Description
 Use docker-compose to build API test clients using pyresttest. These tests will exercise the web crawler's CRUD endpoint built in the previous sprint. Publish built images to Elastic Container Registry (ECR). Deploy API test clients from Sprint 4 on an EC2 instance/ AWS Fargate. Build and push API test dockers through CodePipeline. Push API test results into CloudWatch. Setup alarming and notification on API test metrics.
 ## Concepts
-*	Learn how to create a Front-End app with ReactJS 
-* Learn how to enable authentication using OAuth method 
-* Write accessible React apps using readily available UI libraries. 
+*	Learn AWS services: ECR 
+*	Learn docker: DockerFile, Image, Containers. Docker commands [build, start/stop container, deleting container]. 
+*	Learn container registries: Working with images (Pull/Push), auto-updates to pull new images once published 
+*	Learn API functional testing framework: pyresttest 
+*	Learn AWS Services: EC2 and AWS Fargate  
+*	Extend tests and prod/beta Cl/CD pipelines in CodeDeploy / CodePipeline
   
 ## Technologies
 * AWS ECS
@@ -15,8 +18,6 @@ Use docker-compose to build API test clients using pyresttest. These tests will 
 *  Docker
 * pyresttest
 *  Dynamodb
-* S3 buckets
-* AWS Lambda
 *  AWS Cloudwatch
 *  AWS SNS
  ## Docker Commands
